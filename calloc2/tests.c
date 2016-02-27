@@ -61,8 +61,7 @@ void test_calloc2_2(void) {
         return;
     }
 
-    unsigned char i = 0;
-    for(int i=0; i < 42; i++) {
+    for(unsigned char i=0; i < 42; i++) {
         CU_ASSERT_EQUAL(*(char*)(ptr+i), 0);
     }
 
