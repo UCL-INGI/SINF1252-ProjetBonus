@@ -172,7 +172,7 @@ void test_strcasecmp4(void) {
     }
     else { //On a reçu un autre paramètre que 0, autrement dit le code a exécuté sig_handler
         //On a donc intercepté une segmentation fault, donc le code de l'utilisateur est fautif.
-        CU_FAIL("Un signal SIGSEGV a été provoqué par le code de l'utilisateur.");
+        CU_ASSERT_TRUE(0);
     }
         
     //On enlève le signal handler précédemment assigné à SIGSEGV
