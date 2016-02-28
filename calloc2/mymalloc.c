@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define _GNU_SOURCE
 
 #include <stdlib.h>
+#include <string.h>
 #include <dlfcn.h>
 
 
@@ -46,9 +47,7 @@ void *malloc(size_t size) {
         return NULL;
 
     // On impose que le bloc mémoire n'ait pas déjà des valeurs nulles
-    for(unsigned int i=0; i < size; i++) {
-        *(char*)(ptr+i) = 42;
-    }
+    memset(ptr, 42, size);
 
     return ptr;
 }
