@@ -19,7 +19,7 @@ _Tests imposés :_ Aucun.
 
 ### matrix-mult : Multiplication de matrices
 
-*RESERVATION* : <1 personne>, <1 personne>
+*RESERVATION* : <1 personne>, Siciliano Damiano-Joseph
 
 Écrivez une fonction `int access(int *A, int taille, int ordonnee, int abscisse);` qui renvoie l'élément d'abscisse et d'ordonnée indiquées dans une matrice carrée `taille x taille` d'entiers (il s'agit donc de l'élément A\[ordonnee][abscisse]).
 
