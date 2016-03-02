@@ -133,7 +133,7 @@ _Tests imposés_ : Aucun.
 
 ### index-text : Indexation d'un texte
 
-*RESERVATION* : <1 groupe de 2 personnes>
+*RESERVATION* : Thomas Beznik & Vianney Coppé
 
 On souhaite indexer un texte afin de savoir quels mots reviennent le plus fréquemment dans un corpus. Le processus d'indexation se fait en 2 phases : on compte d'abord le nombre d'occurrences de chaque mot, et on supprime ensuite de la table d'indexation tous les mots qui n'ont pas été indexés au moins `N` fois.
 
