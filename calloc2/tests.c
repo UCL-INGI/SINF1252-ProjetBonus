@@ -74,7 +74,7 @@ jmp_buf label_test_calloc2_3;
 void sig_handler(int signo) {
     //Le signal handler a été exécuté, on a donc reçu un SIGSEGV
     //On provoque alors un jump vers le label avec le paramètre 1
-    siglongjmp(label_test_calloc2_3,1);
+    longjmp(label_test_calloc2_3,1);
 }
 
 // @calloc2:test_calloc2_3 => [Votre fonction calloc ne prend pas en compte le fait que malloc puisse échouer.]
@@ -92,7 +92,7 @@ void test_calloc2_3(void) {
     if(setjmp(label_test_calloc2_3)==0) {
         calloc2(42, 42);
     }
-    else {
+    else if {
         /* IMPORTANT ! On remet let_malloc_fail à 0 pour que CUnit puisse réutiliser malloc par la suite.
          * Ici, si on ne pense pas à remettre cette variable à 0, CUnit ne prend pas en compte l'échec du test. */
         let_malloc_fail = 0; 
