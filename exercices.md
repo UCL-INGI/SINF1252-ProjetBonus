@@ -2,7 +2,7 @@
 
 ### insertion-sort : Tri par insertion
 
-*RESERVATION* : <1 personne>, <1 personne>
+*RESERVATION* : <1 personne>, Siciliano Damiano-Joseph
 
 On désire implémenter un algorithme de tri par insertion sur un tableau de N entiers, le tableau et sa taille étant passés en argument.
 
