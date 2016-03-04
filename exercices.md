@@ -50,7 +50,7 @@ _Tests imposés_ : Les tests à réaliser ici sont intuitifs, il faut toujours s
 
 ### bookstore : Gestion d'une librairie
 
-*RESERVATION* : <1 groupe de 2 personnes>
+*RESERVATION* : <1 groupe de 2 personnes>, 
 
 On souhaite gérer le catalogue d'une librairie dans lequel chaque livre est identifié par son auteur et son titre. La structure de données choisie est la suivante : il y a une liste chaînée d'auteurs dont chaque élément pointe vers une liste chaînée d'ouvrages.
 
@@ -155,7 +155,7 @@ _Tests imposés_ : Réécrivez la fonction `malloc` pour vérifier que l'étudia
 ### rpn-calc : Calculatrice en notation polonaise inversée
 
 
-*RESERVATION* : <1 personne>, <1 personne>
+*RESERVATION* : <1 personne>, Margerie Huet
 
 La notation polonaise inversée permet d'écrire de façon non-ambigüe sans parenthèses des formules arithmétiques. Par exemple, le calcul `((1 + 2) × 4) + 3` peut être noté `1 2 + 4 * 3 +` en notation polonaise inverse, ou encore `3 4 1 2 + * +`. L'avantage de cette notation est qu'elle est très facilement compréhensible par un ordinateur : on imagine une pile où on peut soit ajouter un élément sur la pile, soit retirer le dernier élément ajouté. En parcourant la formule arithmétique, si on rencontre un nombre, on l'ajoute à la pile, si on rencontre une opérande (par ex. le symbole '+'), on retire les 2 derniers éléments de la pile, on en fait la somme et on ajoute le résultat à la pile.
 
