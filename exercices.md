@@ -2,7 +2,7 @@
 
 ### insertion-sort : Tri par insertion
 
-*RESERVATION* : <1 personne>, <1 personne>
+*RESERVATION* : <1 personne>, Siciliano Damiano-Joseph 30391000
 
 On désire implémenter un algorithme de tri par insertion sur un tableau de N entiers, le tableau et sa taille étant passés en argument.
 
@@ -19,7 +19,7 @@ _Tests imposés :_ Aucun.
 
 ### matrix-mult : Multiplication de matrices
 
-*RESERVATION* : <1 personne>, Siciliano Damiano-Joseph
+*RESERVATION* : <1 personne>, <1 personne>
 
 Écrivez une fonction `int access(int *A, int taille, int ordonnee, int abscisse);` qui renvoie l'élément d'abscisse et d'ordonnée indiquées dans une matrice carrée `taille x taille` d'entiers (il s'agit donc de l'élément A\[ordonnee][abscisse]).
 
