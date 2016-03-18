@@ -102,14 +102,14 @@ unsigned int int_to_hex(char *hex) {
 char *hex_to_int(unsigned int n) {
 	char *res = malloc(9*sizeof(char));
 	int i = 0;
-	if (n > pow(16, 7)) {
+	if (n >= pow(16, 7)) {
 		unsigned int residue = n % (unsigned int) pow(16, 7);
 		unsigned int val = (n - residue) / pow(16, 7);
 		*(res+i) = find_char(val);
 		i++;
 		n = residue;
 	}
-	if (n > pow(16, 6)) {
+	if (n >= pow(16, 6)) {
 		unsigned int residue = n % (unsigned int) pow(16, 6);
 		unsigned int val = (n - residue) / pow(16, 6);
 		*(res+i) = find_char(val);
@@ -119,7 +119,7 @@ char *hex_to_int(unsigned int n) {
 		*(res+i)='0';
 		i++;
 	}
-	if (n > pow(16, 5)) {
+	if (n >= pow(16, 5)) {
 		unsigned int residue = n % (unsigned int) pow(16, 5);
 		unsigned int val = (n - residue) / pow(16, 5);
 		*(res+i) = find_char(val);
@@ -129,7 +129,7 @@ char *hex_to_int(unsigned int n) {
 		*(res+i)='0';
 		i++;
 	}
-	if (n > pow(16, 4)) {
+	if (n >= pow(16, 4)) {
 		unsigned int residue = n % (unsigned int) pow(16, 4);
 		unsigned int val = (n - residue) / pow(16, 4);
 		*(res+i) = find_char(val);
@@ -139,7 +139,7 @@ char *hex_to_int(unsigned int n) {
 		*(res+i)='0';
 		i++;
 	}
-	if (n > pow(16, 3)) {
+	if (n >= pow(16, 3)) {
 		unsigned int residue = n % (unsigned int) pow(16, 3);
 		unsigned int val = (n - residue) / pow(16, 3);
 		*(res+i) = find_char(val);
@@ -149,7 +149,7 @@ char *hex_to_int(unsigned int n) {
 		*(res+i)='0';
 		i++;
 	}
-	if (n > pow(16, 2)) {
+	if (n >= pow(16, 2)) {
 		unsigned int residue = n % (unsigned int) pow(16, 2);
 		unsigned int val = (n - residue) / pow(16, 2);
 		*(res+i) = find_char(val);
@@ -159,7 +159,7 @@ char *hex_to_int(unsigned int n) {
 		*(res+i)='0';
 		i++;
 	}
-	if (n > pow(16, 1)) {
+	if (n >= pow(16, 1)) {
 		unsigned int residue = n % (unsigned int) pow(16, 1);
 		unsigned int val = (n - residue) / pow(16, 1);
 		*(res+i) = find_char(val);
@@ -169,10 +169,8 @@ char *hex_to_int(unsigned int n) {
 		*(res+i)='0';
 		i++;
 	}
-	if (n > pow(16, 0)) {
-		unsigned int residue = n % (unsigned int) pow(16, 0);
-		unsigned int val = (n - residue) / pow(16, 0);
-		*(res+i) = find_char(val);
+	if (n >= pow(16, 0)) {
+		*(res+i) = find_char(n);
 		i++;
 	} else {
 		*(res+i)='0';

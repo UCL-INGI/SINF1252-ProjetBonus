@@ -26,4 +26,4 @@ mrproper:
 	@echo "Removing exec"
 	@rm tests
 
-.PHONY: launch clean mrproper
+.PHONY: clean mrproper
