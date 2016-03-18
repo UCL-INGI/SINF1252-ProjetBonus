@@ -29,7 +29,7 @@ _Tests imposés :_ Aucun.
 
 ### poly : Polynomes
 
-*RESERVATION* : Maxime Dimidschstein 62641400, <1 personne>
+*RESERVATION* : Maxime Dimidschstein 62641400, AIGRET Julien 83431300
 
 On souhaite gérer des polynômes réels de degré inférieur ou égal à 10 en utilisant la structure suivante :
 
