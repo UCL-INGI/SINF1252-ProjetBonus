@@ -47,7 +47,7 @@ void test_hex_bigvalue(void) {
 	free(hex);
 }
 
-// @int_to_hex:int_big => [la fonction ne gère pas le nombre hexadécimal le plus grand sur 8 bits]
+// @int_to_hex:int_big => [la fonction ne gère pas l'entier signé le plus grand]
 void test_int_bigvalue(void) {
 	unsigned int n = int_to_hex("FFFFFFFF");
 	unsigned int big = 0-1;
@@ -90,27 +90,32 @@ void test_int_crit(void) {
 	CU_ASSERT_EQUAL(n, 17);
 }
 
+//Fonction d'initialisation
 int setup(void) {
 	return 0;
 }
 
+//Fonction de fin de tests
 int teardown(void) {
 	return 0;
 }
 
 int main(int argc, char const *argv[]) {
+	//Initialisation des tests
 	if (CUE_SUCCESS != CU_initialize_registry())
 		return CU_get_error();
 
 	CU_pSuite pSuite = NULL;
 	CU_pSuite pSuite2 = NULL;
 
+	//Première suite de tests : fonction hex_to_int
 	pSuite = CU_add_suite("hex_to_int", setup, teardown);
 	if (NULL == pSuite) {
 		CU_cleanup_registry();
 		return CU_get_error();
 	}
 
+	//Ajout des tests dans la première suite
 	if (NULL == CU_add_test(pSuite, "Hexa 0", test_hex_0) ||
 		NULL == CU_add_test(pSuite, "Hexa normal", test_hex_normal) ||
 		NULL == CU_add_test(pSuite, "Hexa big value", test_hex_bigvalue) ||
@@ -121,12 +126,14 @@ int main(int argc, char const *argv[]) {
 		return CU_get_error();
 	}
 
+	//Deuxième suite de tests : fonction int_to_hex
 	pSuite2 = CU_add_suite("int_to_hex", setup, teardown);
 	if (NULL == pSuite) {
 		CU_cleanup_registry();
 		return CU_get_error();
 	}
 
+	//Ajout des tests dans la deuxième suite
 	if (NULL == CU_add_test(pSuite2, "Int 0", test_int_0) ||
 		NULL == CU_add_test(pSuite2, "Int normal", test_int_normal) ||
 		NULL == CU_add_test(pSuite2, "Int big value", test_int_bigvalue) ||
@@ -137,6 +144,7 @@ int main(int argc, char const *argv[]) {
 		return CU_get_error();
 	}
 
+	//Lancement des tests
 	CU_basic_set_mode(CU_BRM_VERBOSE);
 	CU_basic_run_tests();
 	CU_basic_show_failures(CU_get_failure_list());
