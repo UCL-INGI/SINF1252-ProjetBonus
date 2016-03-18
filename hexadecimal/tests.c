@@ -4,7 +4,6 @@
 #include "student_code.h"
 
 void test_hex_normal(void) {
-	int i = 42;
 	CU_ASSERT_STRING_EQUAL(hex_to_int(42), "2A");
 }
 

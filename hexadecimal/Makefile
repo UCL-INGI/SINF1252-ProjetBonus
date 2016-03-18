@@ -1,5 +1,7 @@
 FLAGS = -Wall
 
+all: tests clean mrproper
+
 tests: student_code.o tests.o
 	@echo "Linking objects"
 	@gcc -o tests tests.o student_code.o -L$(HOME)/local/lib -lcunit $(FLAGS)
@@ -18,7 +20,7 @@ clean:
 	@echo "Removing objects files"
 	@rm -rf *o
 
-mrproper: clean
+mrproper:
 	@echo "Removing exec"
 	@rm tests
 
