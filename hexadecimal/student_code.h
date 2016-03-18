@@ -1,2 +1,2 @@
-unsigned int int_to_hex(char *hex);
-char *hex_to_int(unsigned int);
+unsigned int hex_to_int(char *hex);
+char *int_to_hex(unsigned int value, char * destination);
