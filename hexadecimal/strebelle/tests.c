@@ -4,11 +4,14 @@
 #include "../student_code.h"
 
 void test_hex_normal(void) {
-	CU_ASSERT_STRING_EQUAL(hex_to_int(42), "2A");
+	char *hex = hex_to_int(42);
+	CU_ASSERT_STRING_EQUAL(hex, "2A");
+	free(hex);
 }
 
 void test_int_normal(void) {
-	CU_ASSERT_EQUAL(int_to_hex("2A"),42);
+	int n = int_to_hex("2A");
+	CU_ASSERT_EQUAL(n,42);
 }
 
 int setup(void) {
