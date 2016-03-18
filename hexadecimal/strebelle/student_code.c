@@ -108,9 +108,6 @@ char *hex_to_int(unsigned int n) {
 		*(res+i) = find_char(val);
 		i++;
 		n = residue;
-	} else if (i!=0) {
-		*(res+i)='0';
-		i++;
 	}
 	if (n > pow(16, 6)) {
 		unsigned int residue = n % (unsigned int) pow(16, 6);

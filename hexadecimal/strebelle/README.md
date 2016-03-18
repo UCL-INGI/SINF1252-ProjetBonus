@@ -7,6 +7,6 @@ Ce projet a pour but de créer des tests unitaires afin de tester le code d'étu
 
 ###Lancer les tests
 
-Afin de lancer les tests, il suffit de lancer la commande suivant dans le terminal :
+Afin de lancer les tests, il suffit de lancer la commande suivante dans le terminal :
 
 	$ make
