@@ -3,6 +3,18 @@
 #include <CUnit/basic.h>
 #include "../student_code.h"
 
+void test_int_0(void) {
+	char *hex = hex_to_int(0);
+	CU_ASSERT_STRING_EQUAL(hex, "0");
+	free(hex);
+}
+
+void test_hex_0(void) {
+	char *hex = "0";
+	unsigned int n = int_to_hex(hex);
+	CU_ASSERT_EQUAL(n, 0);
+}
+
 void test_hex_normal(void) {
 	char *hex = hex_to_int(42);
 	CU_ASSERT_STRING_EQUAL(hex, "2A");
@@ -10,8 +22,22 @@ void test_hex_normal(void) {
 }
 
 void test_int_normal(void) {
-	int n = int_to_hex("2A");
+	unsigned int n = int_to_hex("2A");
 	CU_ASSERT_EQUAL(n,42);
+}
+
+void test_hex_bigvalue(void) {
+	unsigned int big = 0-1;
+	char *hex = hex_to_int(big);
+	CU_ASSERT_STRING_EQUAL(hex, "FFFFFFFF");
+	free(hex);
+}
+
+void test_int_bigvalue(void) {
+	char *hex = "FFFFFFFF";
+	unsigned int n = int_to_hex(hex);
+	unsigned int big = 0-1;
+	CU_ASSERT_EQUAL(n, big);
 }
 
 int setup(void) {
@@ -33,8 +59,12 @@ int main(int argc, char const *argv[]) {
 		return CU_get_error();
 	}
 
-	if (NULL == CU_add_test(pSuite, "test hexa normal", test_hex_normal) ||
-		NULL == CU_add_test(pSuite, "test int normal", test_int_normal)
+	if (NULL == CU_add_test(pSuite, "Int 0", test_int_0) ||
+		NULL == CU_add_test(pSuite, "Hexa 0", test_hex_0) ||
+		NULL == CU_add_test(pSuite, "Hexa normal", test_hex_normal) ||
+		NULL == CU_add_test(pSuite, "Int normal", test_int_normal) ||
+		NULL == CU_add_test(pSuite, "Hexa big value", test_hex_bigvalue) ||
+		NULL == CU_add_test(pSuite, "Int big value", test_int_bigvalue)
 	) {
 		CU_cleanup_registry();
 		return CU_get_error();

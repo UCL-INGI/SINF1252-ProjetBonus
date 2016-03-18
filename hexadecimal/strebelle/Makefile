@@ -6,7 +6,7 @@ tests: student_code.o tests.o
 	@echo "Linking objects"
 	@gcc -o tests tests.o student_code.o -L$(HOME)/local/lib -lcunit $(FLAGS)
 
-launch:
+launch: tests
 	@echo "Launching tests"
 	@./tests
 

@@ -177,7 +177,7 @@ char *hex_to_int(unsigned int n) {
 		unsigned int val = (n - residue) / pow(16, 0);
 		*(res+i) = find_char(val);
 		i++;
-	} else if (i!=0) {
+	} else {
 		*(res+i)='0';
 		i++;
 	}
