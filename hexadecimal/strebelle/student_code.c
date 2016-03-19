@@ -105,7 +105,7 @@ char find_char(int n) {
 *	@pre : chaine de caractère hex représentant un nombre hexadécimal
 *	@post : valeur en base 10 de hex
 */
-unsigned int int_to_hex(char *hex) {
+unsigned int hex_to_int(char *hex) {
 	size_t len = strlen(hex); //Taille de la chaine de caractère
 	unsigned int res = 0; //Valeur à renvoyer
 	for (size_t i = 0; i < len; i++) { //Pour chaque caractère
@@ -114,6 +114,7 @@ unsigned int int_to_hex(char *hex) {
 			fprintf(stderr, "Caractère non accepté : %c\n", c);
 			exit(EXIT_FAILURE);
 		}
+		//int exp = 0; //Décommenter pour échouer les tests
 		int exp = len - (i+1); //Exposant du caractère
 		res += add_char(c, exp); //Ajoute à la solution la valeur du caractère
 	}
@@ -126,83 +127,84 @@ unsigned int int_to_hex(char *hex) {
 *	@pre : entier n non signé
 *	@post : chaine de caractère donna la représentation hexadécimale de n
 */
-char *hex_to_int(unsigned int n) {
-	char *res = malloc(9*sizeof(char)); //Allocation de mémoire pour une chaine de caractère
+char *int_to_hex(unsigned int n, char * destination) {
 	int i = 0; //Indice de la chaine de caractère
+	// if (n > pow(16,7)) //Décommenter pour échouer les tests
 	if (n >= pow(16, 7)) { //Nombre supérieur à 16^7 : Sur 8 caractères
 		unsigned int residue = n % (unsigned int) pow(16, 7);
 		unsigned int val = (n - residue) / pow(16, 7); //Valeur du caractère
-		*(res+i) = find_char(val); //Transformation en hexadécimal
+		*(destination+i) = find_char(val); //Transformation en hexadécimal
 		i++; //Augmentation de la taille de la chaine
 		n = residue; //Reste après ce caractère
 	}
 	if (n >= pow(16, 6)) { //Nombre supérieur à 16^6 : Sur 7 caractères
 		unsigned int residue = n % (unsigned int) pow(16, 6);
 		unsigned int val = (n - residue) / pow(16, 6);
-		*(res+i) = find_char(val);
+		*(destination+i) = find_char(val);
 		i++;
 		n = residue;
 	} else if (i!=0) { //Si le caractère est 0 et que la chaine est déjà commencée
-		*(res+i)='0'; //Ajout du 0
+		*(destination+i)='0'; //Ajout du 0
 		i++; //Augmentation de la taille de la chaine
 	}
 	if (n >= pow(16, 5)) { //Nombre supérieur à 16^5 : Sur 6 caractères
 		unsigned int residue = n % (unsigned int) pow(16, 5);
 		unsigned int val = (n - residue) / pow(16, 5);
-		*(res+i) = find_char(val);
+		*(destination+i) = find_char(val);
 		i++;
 		n = residue;
 	} else if (i!=0) {
-		*(res+i)='0';
+		*(destination+i)='0';
 		i++;
 	}
 	if (n >= pow(16, 4)) { //Nombre supérieur à 16^4 : Sur 5 caractères
 		unsigned int residue = n % (unsigned int) pow(16, 4);
 		unsigned int val = (n - residue) / pow(16, 4);
-		*(res+i) = find_char(val);
+		*(destination+i) = find_char(val);
 		i++;
 		n = residue;
 	} else if (i!=0) {
-		*(res+i)='0';
+		*(destination+i)='0';
 		i++;
 	}
 	if (n >= pow(16, 3)) { //Nombre supérieur à 16^3 : Sur 4 caractères
 		unsigned int residue = n % (unsigned int) pow(16, 3);
 		unsigned int val = (n - residue) / pow(16, 3);
-		*(res+i) = find_char(val);
+		*(destination+i) = find_char(val);
 		i++;
 		n = residue;
 	} else if (i!=0) {
-		*(res+i)='0';
+		*(destination+i)='0';
 		i++;
 	}
 	if (n >= pow(16, 2)) { //Nombre supérieur à 16^2 : Sur 3 caractères
 		unsigned int residue = n % (unsigned int) pow(16, 2);
 		unsigned int val = (n - residue) / pow(16, 2);
-		*(res+i) = find_char(val);
+		*(destination+i) = find_char(val);
 		i++;
 		n = residue;
 	} else if (i!=0) {
-		*(res+i)='0';
+		*(destination+i)='0';
 		i++;
 	}
 	if (n >= pow(16, 1)) { //Nombre supérieur à 16 : Sur 2 caractères
 		unsigned int residue = n % (unsigned int) pow(16, 1);
 		unsigned int val = (n - residue) / pow(16, 1);
-		*(res+i) = find_char(val);
+		*(destination+i) = find_char(val);
 		i++;
 		n = residue;
 	} else if (i!=0) {
-		*(res+i)='0';
+		*(destination+i)='0';
 		i++;
 	}
 	if (n >= pow(16, 0)) { //Nombre supérieur à 1 : Sur 1 caractères
-		*(res+i) = find_char(n);
+		*(destination+i) = find_char(n);
 		i++;
 	} else { //Reste de 0
-		*(res+i)='0';
+		*(destination+i)='0';
 		i++;
 	}
-	*(res+i) = '\0'; //Caractère de fin de chaine
-	return res; //Renvoie la chaine de caractère
+	//return res; //Décommenter pour échouer les tests
+	*(destination+i) = '\0'; //Caractère de fin de chaine
+	return destination; //Renvoie la chaine de caractère
 }

@@ -1,10 +1,10 @@
 FLAGS = -Wall
 
-all: tests launch clean mrproper
+all: launch
 
 tests: student_code.o tests.o
 	@echo "Linking objects"
-	@gcc -o tests tests.o student_code.o -L$(HOME)/local/lib -lcunit $(FLAGS)
+	@gcc -o tests tests.o student_code.o -lm -L$(HOME)/local/lib -lcunit $(FLAGS)
 
 launch: tests
 	@echo "Launching tests"
