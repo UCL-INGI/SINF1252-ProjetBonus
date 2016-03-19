@@ -107,9 +107,9 @@ _Tests imposés_ : Les tests pour `has_key' devraient être assez intuitifs. Pou
 
 On souhaite convertir un entier non signé vers sa représentation hexadécimale. Par exemple l'entier 42 vaut "2A" en hexadécimal. De même, on souhaite faire la conversion dans l'autre sens.
 
-Écrivez une fonction `unsigned int int_to_hex(char *hex)` qui prend en argument une chaîne de caractères représentant un nombre hexadécimal (cette chaîne ne peut comporter que les chiffres de 0 à 9 et les lettres A à F.
+Écrivez une fonction `unsigned int hex_to_int(char *hex)` qui prend en argument une chaîne de caractères représentant un nombre hexadécimal (cette chaîne ne peut comporter que les chiffres de 0 à 9 et les lettres A à F).
 
-Écrivez une fonction `char *hex_to_int(unsigned int)` qui prend en argument un entier non-signé et renvoie sa représentation hexadécimale.
+Écrivez une fonction `char *int_to_hex(unsigned int value, char *dest)` qui prend en argument un entier non-signé et enregistre sa représentation hexadécimale dans la chaîne de caractères indiquée par `dest`. On suppose que `dest` est un tableau de 9 char au minimum. La fonction devra toujours renvoyer le pointeur `dest`.
 
 ### bitwise-ops : Opérations sur les bits
 
