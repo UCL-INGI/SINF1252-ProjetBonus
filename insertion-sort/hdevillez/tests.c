@@ -16,7 +16,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <string.h>
+#include <unistd.h>
 #include <signal.h>
 #include <sys/mman.h>
 #include <CUnit/CUnit.h>
@@ -52,7 +53,7 @@ void testTriBasic(void)
     
 }
 
-// @insertionSort : testTriBasic => [Votre fonction n'arrive pas à trier un tableau trié dans l'autre sens.]
+// @insertionSort : testTabInverse => [Votre fonction n'arrive pas à trier un tableau trié dans l'autre sens.]
 void testTabInverse(void) 
 {
 
@@ -70,7 +71,7 @@ void testTabInverse(void)
     
 }
 
-// @insertionSort : testTriBasic => [Votre fonction n'arrive pas à trier un tableau où un même élément est présent plusieurs fois.]
+// @insertionSort : testWithDuplication => [Votre fonction n'arrive pas à trier un tableau où un même élément est présent plusieurs fois.]
 void testWithDuplication(void) 
 {
  
@@ -87,7 +88,7 @@ void testWithDuplication(void)
  
 }
 
-// @insertionSort : testTriBasic => [Votre fonction n'arrive pas à trier un tableau d'un élément.]
+// @insertionSort : testWithOneElement => [Votre fonction n'arrive pas à trier un tableau d'un élément.]
 void testWithOneElement(void) 
 {
     int tab[] = {1};
@@ -106,7 +107,7 @@ void sig_handler(int signo) {
     siglongjmp(labelTestOverflow, 1);    
 }
 
-// @insertionSort : testTriBasic => [Votre fonction provoque accède à une zone mémoire à droite du tableau.]
+// @insertionSort : testOverflow => [Votre fonction accède à une zone mémoire à droite du tableau.]
 void testOverflow(void) {
     
     int *tab;
@@ -119,7 +120,7 @@ void testOverflow(void) {
         return ;    
     }
 
-    int a = mprotect(ptr+getpagesize(), getpagesize(), PROT_NONE);
+    mprotect(ptr+getpagesize(), getpagesize(), PROT_NONE);
     
     tab = (int *) (ptr+getpagesize()-4*sizeof(int));
    
@@ -160,18 +161,18 @@ int main(int argc, char * argv[])
 
     CU_pSuite pSuite = NULL;
 
-    pSuite = CU_add_suite("masuite", setup, teardown);
+    pSuite = CU_add_suite("mySuite", setup, teardown);
     
     if(NULL == pSuite) {
         CU_cleanup_registry();
         return CU_get_error(); 
     }
        
-    if(NULL == CU_add_test(pSuite, "Test basique", testTriBasic) ||
-       NULL == CU_add_test(pSuite, "Test tableau inverse", testTabInverse) ||
-       NULL == CU_add_test(pSuite, "Test avec doublons", testWithDuplication) ||
-       NULL == CU_add_test(pSuite, "Test avec overflow", testOverflow) ||
-       NULL == CU_add_test(pSuite, "Test avec un élément", testWithOneElement)) {
+    if(NULL == CU_add_test(pSuite, "testTriBasic", testTriBasic) ||
+       NULL == CU_add_test(pSuite, "testTabInverse", testTabInverse) ||
+       NULL == CU_add_test(pSuite, "testWithDuplication", testWithDuplication) ||
+       NULL == CU_add_test(pSuite, "testOverflow", testOverflow) ||
+       NULL == CU_add_test(pSuite, "testWithOneElement", testWithOneElement)) {
         
         CU_cleanup_registry();
         return CU_get_error();    
