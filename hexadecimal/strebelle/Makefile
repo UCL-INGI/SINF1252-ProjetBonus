@@ -1,6 +1,8 @@
 FLAGS = -Wall
 
-all: launch
+all: tests
+
+fast: launch clean mrproper
 
 tests: student_code.o tests.o
 	@echo "Linking objects"

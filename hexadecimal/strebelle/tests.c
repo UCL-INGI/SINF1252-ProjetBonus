@@ -4,35 +4,34 @@
 #include <CUnit/Basic.h>
 #include "../student_code.h"
 
+char *hex = NULL;
+unsigned int n = 0;
+
 // @hex_to_int:hex_0 => [la fonction ne gère pas l'entier nul]
 void test_hex_0(void) {
-	char *hex = malloc(9*sizeof(char));
-	hex = int_to_hex(0, hex);
+	int_to_hex(0, hex);
 	CU_ASSERT_STRING_EQUAL(hex, "0");
-	free(hex);
 }
 
 // @int_to_hex:int_0 => [la fonction ne gère pas le nombre hexadécimal nul]
 void test_int_0(void) {
-	unsigned int n = hex_to_int("0");
+	n = hex_to_int("0");
 	CU_ASSERT_EQUAL(n, 0);
 }
 
 // @hex_to_int:hex_normal => [la fonction ne renvoie pas les bonnes valeurs (42->2A, 19->13, 408->198)]
 void test_hex_normal(void) {
-	char *hex  = malloc(9*sizeof(char));
-	hex = int_to_hex(42, hex);
+	int_to_hex(42, hex);
 	CU_ASSERT_STRING_EQUAL(hex, "2A");
-	hex = int_to_hex(19, hex);
+	int_to_hex(19, hex);
 	CU_ASSERT_STRING_EQUAL(hex, "13");
-	hex = int_to_hex(408, hex);
+	int_to_hex(408, hex);
 	CU_ASSERT_STRING_EQUAL(hex, "198");
-	free(hex);
 }
 
 // @int_to_hex:int_normal => [la fonction ne renvoie pas les bonnes valeurs (2A->42, 13->19, 198->408)]
 void test_int_normal(void) {
-	unsigned int n = hex_to_int("2A");
+	n = hex_to_int("2A");
 	CU_ASSERT_EQUAL(n, 42);
 	n = hex_to_int("13");
 	CU_ASSERT_EQUAL(n, 19);
@@ -43,48 +42,42 @@ void test_int_normal(void) {
 // @hex_to_int:hex_big => [la fonction ne gère pas l'entier non signé le plus grand]
 void test_hex_bigvalue(void) {
 	unsigned int big = -1;
-	char *hex  = malloc(9*sizeof(char));
-	hex = int_to_hex(big, hex);
+	int_to_hex(big, hex);
 	CU_ASSERT_STRING_EQUAL(hex, "FFFFFFFF");
-	free(hex);
 }
 
 // @int_to_hex:int_big => [la fonction ne gère pas l'entier signé le plus grand]
 void test_int_bigvalue(void) {
-	unsigned int n = hex_to_int("FFFFFFFF");
 	unsigned int big = -1;
+	n = hex_to_int("FFFFFFFF");
 	CU_ASSERT_EQUAL(n, big);
-
 }
 
 // @hex_to_int:hex_0_inside => [la fonction ne gère pas les nombres hexadécimaux contenant des 0]
 void test_hex_0_inside(void) {
-	char *hex  = malloc(9*sizeof(char));
-	hex = int_to_hex(1037, hex);
+	int_to_hex(1037, hex);
 	CU_ASSERT_STRING_EQUAL(hex, "40D");
 }
 
 // @int_to_hex:int_0_inside => [la fonction ne gère pas les nombres hexadécimaux contenant des 0]
 void test_int_0_inside(void) {
-	unsigned int n = hex_to_int("40D");
+	n = hex_to_int("40D");
 	CU_ASSERT_EQUAL(n, 1037);
 }
 
 // @hex_to_int:hex_crit => [la fonction ne gère pas les valeurs critiques (1->1, 16->10, 17->11)]
 void test_hex_crit(void) {
-	char *hex  = malloc(9*sizeof(char));
-	hex = int_to_hex(1, hex);
+	int_to_hex(1, hex);
 	CU_ASSERT_STRING_EQUAL(hex, "1");
-	hex = int_to_hex(16, hex);
+	int_to_hex(16, hex);
 	CU_ASSERT_STRING_EQUAL(hex, "10");
-	hex = int_to_hex(17, hex);
+	int_to_hex(17, hex);
 	CU_ASSERT_STRING_EQUAL(hex, "11");
-	free(hex);
 }
 
 // @int_to_hex:int_crit => [la fonction ne gère pas les valeurs critiques (1->1, 10->16, 11->17)]
 void test_int_crit(void) {
-	unsigned int n = hex_to_int("1");
+	n = hex_to_int("1");
 	CU_ASSERT_EQUAL(n, 1);
 	n = hex_to_int("10");
 	CU_ASSERT_EQUAL(n, 16);
@@ -94,11 +87,16 @@ void test_int_crit(void) {
 
 //Fonction d'initialisation
 int setup(void) {
-	return 0;
+	hex = malloc(9*sizeof(char));
+	if (hex != NULL)
+		return 0;
+	else
+		return -1;
 }
 
 //Fonction de fin de tests
 int teardown(void) {
+	free(hex);
 	return 0;
 }
 
