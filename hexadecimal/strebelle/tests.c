@@ -7,19 +7,19 @@
 char *hex = NULL;
 unsigned int n = 0;
 
-// @hex_to_int:hex_0 => [la fonction ne gère pas l'entier nul]
+// @int_to_hex:hex_0 => [la fonction ne gère pas l'entier nul]
 void test_hex_0(void) {
 	int_to_hex(0, hex);
 	CU_ASSERT_STRING_EQUAL(hex, "0");
 }
 
-// @int_to_hex:int_0 => [la fonction ne gère pas le nombre hexadécimal nul]
+// @hex_to_int:int_0 => [la fonction ne gère pas le nombre hexadécimal nul]
 void test_int_0(void) {
 	n = hex_to_int("0");
 	CU_ASSERT_EQUAL(n, 0);
 }
 
-// @hex_to_int:hex_normal => [la fonction ne renvoie pas les bonnes valeurs (42->2A, 19->13, 408->198)]
+// @int_to_hex:hex_normal => [la fonction ne renvoie pas les bonnes valeurs (42->2A, 19->13, 408->198)]
 void test_hex_normal(void) {
 	int_to_hex(42, hex);
 	CU_ASSERT_STRING_EQUAL(hex, "2A");
@@ -29,7 +29,7 @@ void test_hex_normal(void) {
 	CU_ASSERT_STRING_EQUAL(hex, "198");
 }
 
-// @int_to_hex:int_normal => [la fonction ne renvoie pas les bonnes valeurs (2A->42, 13->19, 198->408)]
+// @hex_to_int:int_normal => [la fonction ne renvoie pas les bonnes valeurs (2A->42, 13->19, 198->408)]
 void test_int_normal(void) {
 	n = hex_to_int("2A");
 	CU_ASSERT_EQUAL(n, 42);
@@ -39,33 +39,33 @@ void test_int_normal(void) {
 	CU_ASSERT_EQUAL(n, 408);
 }
 
-// @hex_to_int:hex_big => [la fonction ne gère pas l'entier non signé le plus grand]
+// @int_to_hex:hex_big => [la fonction ne gère pas l'entier non signé le plus grand]
 void test_hex_bigvalue(void) {
 	unsigned int big = -1;
 	int_to_hex(big, hex);
 	CU_ASSERT_STRING_EQUAL(hex, "FFFFFFFF");
 }
 
-// @int_to_hex:int_big => [la fonction ne gère pas l'entier signé le plus grand]
+// @hex_to_int:int_big => [la fonction ne gère pas l'entier signé le plus grand]
 void test_int_bigvalue(void) {
 	unsigned int big = -1;
 	n = hex_to_int("FFFFFFFF");
 	CU_ASSERT_EQUAL(n, big);
 }
 
-// @hex_to_int:hex_0_inside => [la fonction ne gère pas les nombres hexadécimaux contenant des 0]
+// @int_to_hex:hex_0_inside => [la fonction ne gère pas les nombres hexadécimaux contenant des 0]
 void test_hex_0_inside(void) {
 	int_to_hex(1037, hex);
 	CU_ASSERT_STRING_EQUAL(hex, "40D");
 }
 
-// @int_to_hex:int_0_inside => [la fonction ne gère pas les nombres hexadécimaux contenant des 0]
+// @hex_to_int:int_0_inside => [la fonction ne gère pas les nombres hexadécimaux contenant des 0]
 void test_int_0_inside(void) {
 	n = hex_to_int("40D");
 	CU_ASSERT_EQUAL(n, 1037);
 }
 
-// @hex_to_int:hex_crit => [la fonction ne gère pas les valeurs critiques (1->1, 16->10, 17->11)]
+// @int_to_hex:hex_crit => [la fonction ne gère pas les valeurs critiques (1->1, 16->10, 17->11)]
 void test_hex_crit(void) {
 	int_to_hex(1, hex);
 	CU_ASSERT_STRING_EQUAL(hex, "1");
@@ -75,7 +75,7 @@ void test_hex_crit(void) {
 	CU_ASSERT_STRING_EQUAL(hex, "11");
 }
 
-// @int_to_hex:int_crit => [la fonction ne gère pas les valeurs critiques (1->1, 10->16, 11->17)]
+// @hex_to_int:int_crit => [la fonction ne gère pas les valeurs critiques (1->1, 10->16, 11->17)]
 void test_int_crit(void) {
 	n = hex_to_int("1");
 	CU_ASSERT_EQUAL(n, 1);
@@ -120,7 +120,7 @@ int main(int argc, char const *argv[]) {
 		NULL == CU_add_test(pSuite, "Hexa normal", test_hex_normal) ||
 		NULL == CU_add_test(pSuite, "Hexa big value", test_hex_bigvalue) ||
 		NULL == CU_add_test(pSuite, "Hexa 0 inside", test_hex_0_inside) ||
-		NULL == CU_add_test(pSuite, "Hexa critic value", test_hex_crit)
+		NULL == CU_add_test(pSuite, "Hexa critical value", test_hex_crit)
 	) {
 		CU_cleanup_registry();
 		return CU_get_error();
@@ -138,7 +138,7 @@ int main(int argc, char const *argv[]) {
 		NULL == CU_add_test(pSuite2, "Int normal", test_int_normal) ||
 		NULL == CU_add_test(pSuite2, "Int big value", test_int_bigvalue) ||
 		NULL == CU_add_test(pSuite2, "Int 0 inside", test_int_0_inside) ||
-		NULL == CU_add_test(pSuite2, "Int critic value", test_int_crit)
+		NULL == CU_add_test(pSuite2, "Int critical value", test_int_crit)
 	) {
 		CU_cleanup_registry();
 		return CU_get_error();
