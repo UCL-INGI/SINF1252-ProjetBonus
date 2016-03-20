@@ -79,7 +79,7 @@ _Tests imposés_ : Outre les tests classiques, assurez-vous que la fonction `add
 
 ### btree-access : Parcours d'un arbre binaire de recherche
 
-*RESERVATION* : <Bertrand Van Ouytsel Charles-Henry 15221400>, <1 personne>
+*RESERVATION* : <Bertrand Van Ouytsel Charles-Henry 15221400>, William Salame 50691400
 
 On souhaite parcourir un arbre binaire de recherche. Un arbre de recherche binaire est une structure de données où chaque nœud possède une clé et une valeur. En outre, chaque nœud peut avoir 2 nœuds fils : un à gauche dont la clé est toujours inférieure à la sienne, et un à droite dont la clé est toujours supérieure à la sienne. Autrement dit si vous êtes à un nœud dont la clé vaut 10 et que vous cherchez un nœud dont la clé vaut 5, vous savez que vous devez descendre à gauche pour espérer trouver un éventuel nœud dont la clé vaut 5.
 
