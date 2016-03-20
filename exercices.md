@@ -2,7 +2,7 @@
 
 ### insertion-sort : Tri par insertion
 
-*RESERVATION* : <1 personne>, Siciliano Damiano-Joseph
+*RESERVATION* : Devillez Henri, Siciliano Damiano-Joseph
 
 On désire implémenter un algorithme de tri par insertion sur un tableau de N entiers, le tableau et sa taille étant passés en argument.
 
@@ -19,7 +19,7 @@ _Tests imposés :_ Aucun.
 
 ### matrix-mult : Multiplication de matrices
 
-*RESERVATION* : <1 personne>, <1 personne>
+*RESERVATION* : Adrien BALLET 20971400, Sébastien MOTTET 18521400
 
 Écrivez une fonction `int access(int *A, int taille, int ordonnee, int abscisse);` qui renvoie l'élément d'abscisse et d'ordonnée indiquées dans une matrice carrée `taille x taille` d'entiers (il s'agit donc de l'élément A\[ordonnee][abscisse]).
 
@@ -29,7 +29,7 @@ _Tests imposés :_ Aucun.
 
 ### poly : Polynomes
 
-*RESERVATION* : Maxime Dimidschstein 62641400, <1 personne>
+*RESERVATION* : Maxime Dimidschstein 62641400, AIGRET Julien 83431300
 
 On souhaite gérer des polynômes réels de degré inférieur ou égal à 10 en utilisant la structure suivante :
 
@@ -50,7 +50,7 @@ _Tests imposés_ : Les tests à réaliser ici sont intuitifs, il faut toujours s
 
 ### bookstore : Gestion d'une librairie
 
-*RESERVATION* : <1 groupe de 2 personnes>
+*RESERVATION* : <1 groupe de 2 personnes>, 
 
 On souhaite gérer le catalogue d'une librairie dans lequel chaque livre est identifié par son auteur et son titre. La structure de données choisie est la suivante : il y a une liste chaînée d'auteurs dont chaque élément pointe vers une liste chaînée d'ouvrages.
 
@@ -79,7 +79,7 @@ _Tests imposés_ : Outre les tests classiques, assurez-vous que la fonction `add
 
 ### btree-access : Parcours d'un arbre binaire de recherche
 
-*RESERVATION* : <1 personne>, <1 personne>
+*RESERVATION* : <Bertrand Van Ouytsel Charles-Henry 15221400>, <1 personne>
 
 On souhaite parcourir un arbre binaire de recherche. Un arbre de recherche binaire est une structure de données où chaque nœud possède une clé et une valeur. En outre, chaque nœud peut avoir 2 nœuds fils : un à gauche dont la clé est toujours inférieure à la sienne, et un à droite dont la clé est toujours supérieure à la sienne. Autrement dit si vous êtes à un nœud dont la clé vaut 10 et que vous cherchez un nœud dont la clé vaut 5, vous savez que vous devez descendre à gauche pour espérer trouver un éventuel nœud dont la clé vaut 5.
 
@@ -103,13 +103,13 @@ _Tests imposés_ : Les tests pour `has_key' devraient être assez intuitifs. Pou
 
 ### hexadecimal : Conversion d'un unsigned int vers hexadécimal et vice-versa
 
-*RESERVATION* : <1 personne>, <1 personne>
+*RESERVATION* : <1 personne>, Simon HICK 8853-1200
 
 On souhaite convertir un entier non signé vers sa représentation hexadécimale. Par exemple l'entier 42 vaut "2A" en hexadécimal. De même, on souhaite faire la conversion dans l'autre sens.
 
-Écrivez une fonction `unsigned int int_to_hex(char *hex)` qui prend en argument une chaîne de caractères représentant un nombre hexadécimal (cette chaîne ne peut comporter que les chiffres de 0 à 9 et les lettres A à F.
+Écrivez une fonction `unsigned int hex_to_int(char *hex)` qui prend en argument une chaîne de caractères représentant un nombre hexadécimal (cette chaîne ne peut comporter que les chiffres de 0 à 9 et les lettres A à F).
 
-Écrivez une fonction `char *hex_to_int(unsigned int)` qui prend en argument un entier non-signé et renvoie sa représentation hexadécimale.
+Écrivez une fonction `char *int_to_hex(unsigned int value, char *dest)` qui prend en argument un entier non-signé et enregistre sa représentation hexadécimale dans la chaîne de caractères indiquée par `dest`. On suppose que `dest` est un tableau de 9 char au minimum. La fonction devra toujours renvoyer le pointeur `dest`.
 
 ### bitwise-ops : Opérations sur les bits
 
@@ -155,7 +155,7 @@ _Tests imposés_ : Réécrivez la fonction `malloc` pour vérifier que l'étudia
 ### rpn-calc : Calculatrice en notation polonaise inversée
 
 
-*RESERVATION* : <1 personne>, <1 personne>
+*RESERVATION* : <1 personne>, Margerie Huet
 
 La notation polonaise inversée permet d'écrire de façon non-ambigüe sans parenthèses des formules arithmétiques. Par exemple, le calcul `((1 + 2) × 4) + 3` peut être noté `1 2 + 4 * 3 +` en notation polonaise inverse, ou encore `3 4 1 2 + * +`. L'avantage de cette notation est qu'elle est très facilement compréhensible par un ordinateur : on imagine une pile où on peut soit ajouter un élément sur la pile, soit retirer le dernier élément ajouté. En parcourant la formule arithmétique, si on rencontre un nombre, on l'ajoute à la pile, si on rencontre une opérande (par ex. le symbole '+'), on retire les 2 derniers éléments de la pile, on en fait la somme et on ajoute le résultat à la pile.
 
