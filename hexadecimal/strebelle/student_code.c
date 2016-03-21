@@ -197,7 +197,7 @@ char *int_to_hex(unsigned int n, char * destination) {
 		*(destination+i)='0';
 		i++;
 	}
-	if (n >= pow(16, 0)) { //Nombre supérieur à 1 : Sur 1 caractères
+	if (n >= pow(16, 0)) { //Nombre supérieur à 1 : Sur 1 caractère
 		*(destination+i) = find_char(n);
 		i++;
 	} else { //Reste de 0
