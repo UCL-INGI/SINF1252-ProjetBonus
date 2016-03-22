@@ -50,7 +50,7 @@ _Tests imposés_ : Les tests à réaliser ici sont intuitifs, il faut toujours s
 
 ### bookstore : Gestion d'une librairie
 
-*RESERVATION* : <1 groupe de 2 personnes>, 
+*RESERVATION* : Thomas Wirtgen 1331-1400 & Florent Mabille 4456-1400, 
 
 On souhaite gérer le catalogue d'une librairie dans lequel chaque livre est identifié par son auteur et son titre. La structure de données choisie est la suivante : il y a une liste chaînée d'auteurs dont chaque élément pointe vers une liste chaînée d'ouvrages.
 
