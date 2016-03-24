@@ -103,7 +103,7 @@ _Tests imposés_ : Les tests pour `has_key' devraient être assez intuitifs. Pou
 
 ### hexadecimal : Conversion d'un unsigned int vers hexadécimal et vice-versa
 
-*RESERVATION* : Sébastien Strebelle, Simon HICK 8853-1200
+*RESERVATION* : <1 personne>, Simon HICK 8853-1200
 
 On souhaite convertir un entier non signé vers sa représentation hexadécimale. Par exemple l'entier 42 vaut "2A" en hexadécimal. De même, on souhaite faire la conversion dans l'autre sens.
 
@@ -113,7 +113,7 @@ On souhaite convertir un entier non signé vers sa représentation hexadécimale
 
 ### bitwise-ops : Opérations sur les bits
 
-*RESERVATION* : Robin HORMAUX 5666-1300, <1 personne>
+*RESERVATION* : Robin HORMAUX 5666-1300, Maxime WATTIAUX 6558-1400
 
 On souhaite effectuer des opérations spécifiques sur certains bits d'un entier non-signé.
 
