@@ -113,7 +113,7 @@ On souhaite convertir un entier non signé vers sa représentation hexadécimale
 
 ### bitwise-ops : Opérations sur les bits
 
-*RESERVATION* : Robin HORMAUX 5666-1300, <1 personne>
+*RESERVATION* : Robin HORMAUX 5666-1300, Maxime WATTIAUX 6558-1400
 
 On souhaite effectuer des opérations spécifiques sur certains bits d'un entier non-signé.
 
