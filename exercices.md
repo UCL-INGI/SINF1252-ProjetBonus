@@ -103,7 +103,7 @@ _Tests imposés_ : Les tests pour `has_key' devraient être assez intuitifs. Pou
 
 ### hexadecimal : Conversion d'un unsigned int vers hexadécimal et vice-versa
 
-*RESERVATION* : <1 personne>, Simon HICK 8853-1200
+*RESERVATION* : Arnaud Gellens 68341400, Simon HICK 8853-1200
 
 On souhaite convertir un entier non signé vers sa représentation hexadécimale. Par exemple l'entier 42 vaut "2A" en hexadécimal. De même, on souhaite faire la conversion dans l'autre sens.
 
