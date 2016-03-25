@@ -28,7 +28,6 @@ double rpn(char *expr){
     while( token != NULL )
     {
         if(strcmp(token,"+")==0){
-                printf("PLUS\n");
                 a=pop();
                 b=pop();
                 push(a+b);
