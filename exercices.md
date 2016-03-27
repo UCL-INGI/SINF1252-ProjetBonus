@@ -71,7 +71,7 @@ _Tests imposés_ : Les tests à réaliser ici sont intuitifs, il faut toujours s
 
 ### bookstore : Gestion d'une librairie
 
-*RESERVATION* : <1 groupe de 2 personnes>, 
+*RESERVATION* : Thomas Wirtgen 1331-1400 & Florent Mabille 4456-1400, 
 
 On souhaite gérer le catalogue d'une librairie dans lequel chaque livre est identifié par son auteur et son titre. La structure de données choisie est la suivante : il y a une liste chaînée d'auteurs dont chaque élément pointe vers une liste chaînée d'ouvrages.
 
@@ -100,7 +100,7 @@ _Tests imposés_ : Outre les tests classiques, assurez-vous que la fonction `add
 
 ### btree-access : Parcours d'un arbre binaire de recherche
 
-*RESERVATION* : <Bertrand Van Ouytsel Charles-Henry 15221400>, <1 personne>
+*RESERVATION* : Bertrand Van Ouytsel Charles-Henry 15221400, William Salame 50691400
 
 On souhaite parcourir un arbre binaire de recherche. Un arbre de recherche binaire est une structure de données où chaque nœud possède une clé et une valeur. En outre, chaque nœud peut avoir 2 nœuds fils : un à gauche dont la clé est toujours inférieure à la sienne, et un à droite dont la clé est toujours supérieure à la sienne. Autrement dit si vous êtes à un nœud dont la clé vaut 10 et que vous cherchez un nœud dont la clé vaut 5, vous savez que vous devez descendre à gauche pour espérer trouver un éventuel nœud dont la clé vaut 5.
 
@@ -124,7 +124,7 @@ _Tests imposés_ : Les tests pour `has_key' devraient être assez intuitifs. Pou
 
 ### hexadecimal : Conversion d'un unsigned int vers hexadécimal et vice-versa
 
-*RESERVATION* : <1 personne>, Simon HICK 8853-1200
+*RESERVATION* : Sébastien Strebelle, Simon HICK 8853-1200
 
 On souhaite convertir un entier non signé vers sa représentation hexadécimale. Par exemple l'entier 42 vaut "2A" en hexadécimal. De même, on souhaite faire la conversion dans l'autre sens.
 
@@ -134,7 +134,7 @@ On souhaite convertir un entier non signé vers sa représentation hexadécimale
 
 ### bitwise-ops : Opérations sur les bits
 
-*RESERVATION* : <1 personne>, <1 personne>
+*RESERVATION* : Robin HORMAUX 5666-1300, Maxime WATTIAUX 6558-1400
 
 On souhaite effectuer des opérations spécifiques sur certains bits d'un entier non-signé.
 
@@ -176,7 +176,7 @@ _Tests imposés_ : Réécrivez la fonction `malloc` pour vérifier que l'étudia
 ### rpn-calc : Calculatrice en notation polonaise inversée
 
 
-*RESERVATION* : <1 personne>, Margerie Huet
+*RESERVATION* : Mathias NOVAK 41501400, Margerie Huet
 
 La notation polonaise inversée permet d'écrire de façon non-ambigüe sans parenthèses des formules arithmétiques. Par exemple, le calcul `((1 + 2) × 4) + 3` peut être noté `1 2 + 4 * 3 +` en notation polonaise inverse, ou encore `3 4 1 2 + * +`. L'avantage de cette notation est qu'elle est très facilement compréhensible par un ordinateur : on imagine une pile où on peut soit ajouter un élément sur la pile, soit retirer le dernier élément ajouté. En parcourant la formule arithmétique, si on rencontre un nombre, on l'ajoute à la pile, si on rencontre une opérande (par ex. le symbole '+'), on retire les 2 derniers éléments de la pile, on en fait la somme et on ajoute le résultat à la pile.
 
