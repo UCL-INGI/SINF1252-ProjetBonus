@@ -129,7 +129,7 @@ void test_int_to_hex2(void)
 	free(hex1);
 }
 
-//@strcat:test_int_to_hex4 => [int_to_hex ne retourne pas "0" quand number=0]
+//@strcat:test_int_to_hex3 => [int_to_hex ne retourne pas "0" quand number=0]
 void test_int_to_hex3(void)
 {
 	unsigned int i = 0;
