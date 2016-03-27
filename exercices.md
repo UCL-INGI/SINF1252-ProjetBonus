@@ -1,5 +1,26 @@
 # Liste des exercices proposés
 
+### reader-writer : Gestion de readers/writers
+
+*RESERVATION* : <1 groupe de 2 personnes>
+
+Vous développez un système de cache générique qui permet d'associer à un identifiant entier unique un pointeur vers un objet quelconque en mémoire. Vous souhaitez que votre cache soit thread-safe. Cependant, vu la structure de votre programme, la lecture ou l'écriture d'un élément dans le cache peut se faire via différentes fonctions différentes. Vous souhaitez alors coder 2 fonctions, `readerAllow` et `writerAllow` qui permettront aux fonctions de lecture et d'écriture de s'exécuter de manière thread-safe. Vous souhaitez que cette gestion thread-safe aie les propriétés suivantes :
+
+- Il ne peut y avoir qu'un seul writer qui accède à la base de données à tout moment
+- Un writer doit toujours avoir la priorité sur un reader s'ils tentent simultanément d'accéder au cache
+
+Déclarez les variables globales qui seront utilisées par votre programme. Vous avez droit aux fonctions des headers pthread.h et semaphore.h.
+
+Écrivez une fonction d'initialisation `void initRW()` qui initialisera les structures globales que vous avez déclarées précédemment. Cette fonction sera lancée en même temps que l'initialisation du cache.
+
+Écrivez une fonction `void *readerAllow(int key, void *(*reader)(int key))` qui exécutera de manière thread-safe la fonction `reader` avec la clé passée en argument à `readerAllow` et renverra le résultat fourni par `reader`.
+
+Écrivez une fonction `void writerAllow(int key, int value, void *(*writer)(int key, int value))` qui exécutera de manière thread-safe la fonction `writer` avec la clé et la valeur passées en argument à `writerAllow`.
+
+*NOTES IMPORTANTES* : Ici, la solution de l'exercice en elle-même est déjà toute faite, il s'agit du code du writer/reader fournie par le cours (http://sites.uclouvain.be/SystInfo/notes/Theorie/html/Threads/coordination.html#probleme-des-readers-writers) avec priorité aux writers. Vous devrez juste remplacer les sections critiques par un appel aux fonctions passées comme pointeurs en argument.
+
+La difficulté de l'exercice réside dans l'écriture des tests. Vous devez réfléchir à des tests qui permettent de s'assurer qu'un writer est toujours exécuté seul, et que les writers ont priorité sur les readers. Le fait que les fonctions `readerAllow` et `writerAllow` utilisent des pointeurs de fonction n'est pas anodin : vous pouvez par exemple faire un writer bloquant à l'aide d'un mutex, puis de lancer un reader et vous assurer que le reader n'est pas exécuté tant que vous n'avez pas déverouillé le mutex du writer. Soyez créatifs dans vos tests et faites-en sorte que ceux-ci vérifient bien tous les cas limites du problème du reader/writer.
+
 ### insertion-sort : Tri par insertion
 
 *RESERVATION* : Devillez Henri, Siciliano Damiano-Joseph
@@ -169,3 +190,4 @@ Vous pouvez supposer que les exemples utilisés par les tests feront en sorte qu
 Écrivez une fonction `double rpn(char *expr)` qui calcule l'expression en notation polonaise inverse contenue dans `expr` et retourne le résultat. Vous pouvez supposer que `expr` contiendra toujours une expression correcte où il ne restera jamais qu'un seul élément sur la pile à la fin de l'exécution. Indice : utilisez la fonction `strtok(3)` pour séparer les différents éléments de la chaîne et la fonction `atof(3)` pour convertir l'éventuel nombre rencontré en double. Exemple : "4 2 5 * + 1 3 2 * + /" est censé renvoyer 2. Les opérandes possibles sont + (addition), - (soustraction), * (multiplication) et / (division).
 
 _Tests imposés_ : Faites bien attention à ne tester que des expressions valides. Testez bien les différentes opérandes et réalisez également des tests uniquement pour les fonctions `pop` et `push`.
+
