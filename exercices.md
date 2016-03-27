@@ -156,20 +156,20 @@ _Tests imposés_ : Aucun.
 
 *RESERVATION* : Thomas Beznik & Vianney Coppé
 
-On souhaite indexer un texte afin de savoir quels mots reviennent le plus fréquemment dans un corpus. Le processus d'indexation se fait en 2 phases : on compte d'abord le nombre d'occurrences de chaque mot, et on supprime ensuite de la table d'indexation tous les mots qui n'ont pas été indexés au moins `N` fois.
+On souhaite indexer un texte afin de savoir quels mots reviennent le plus fréquemment dans un corpus. Le processus d'indexation se fait en 2 phases : on compte d'abord le nombre d'occurrences de chaque mot, et on supprime ensuite de la table d'indexation tous les mots qui n'ont pas été indexés au moins `N` fois. Le corpus est une chaîne de caractères composées uniquement de minuscules et où le seul délimiteur est un espace (pas de ponctuation).
 
 On définit la structure suivante représentant une entrée de l'index :
 ```
 typedef struct indexEntry {
-    char *word;
+    char word[26];
     int count; //nombre de fois qu'un mot est apparu dans le corpus
     struct indexEntry *next;
 } Entry;
 ```
 
-Écrivez une fonction `Entry *build_index(char *corpus)` qui renvoie l'index associé au corpus passé en paramètre.
+Écrivez une fonction `Entry *build_index(char *corpus)` qui renvoie l'index associé au corpus passé en paramètre. Vous pouvez modifier la chaine passée en argument.
 
-Écrivez une fonction `void filter_index(int treshold)` qui supprime de l'index tous les mots qui n'ont pas été recensés au moins `treshold` fois.
+Écrivez une fonction `void filter_index(Entry *index_head, int treshold)` qui supprime de l'index tous les mots qui n'ont pas été recensés au moins `treshold` fois.
 
 _Tests imposés_ : Réécrivez la fonction `malloc` pour vérifier que l'étudiant gère le cas où `malloc` renvoie NULL, pensez à intercepter un éventuel segfault lorsque vous faites "bugger" `malloc`. Réécrivez la fonction `free` afin de compter le nombre d'appels à `free` effectués pour s'assurer que l'étudiant libère bien de la mémoire les entrées de l'index qui sont éliminées par le filtre. Assurez-vous que l'étudiant ne fait pas de buffer-overflow, c'est-à-dire qu'il ne dépasse pas par la droite la chaîne "corpus" : écrivez dans un test unitaire le corpus à la fin d'une page mémoire et mettez la page mémoire suivante en PROT_NONE, et pensez à intercepter un éventuel segfault.
 
