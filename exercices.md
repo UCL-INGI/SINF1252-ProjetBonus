@@ -2,7 +2,7 @@
 
 ### reader-writer : Gestion de readers/writers
 
-*RESERVATION* : <1 groupe de 2 personnes>
+*RESERVATION* : <1 groupe de max. 2 personnes>
 
 Vous développez un système de cache générique qui permet d'associer à un identifiant entier unique un pointeur vers un objet quelconque en mémoire. Vous souhaitez que votre cache soit thread-safe. Cependant, vu la structure de votre programme, la lecture ou l'écriture d'un élément dans le cache peut se faire via différentes fonctions différentes. Vous souhaitez alors coder 2 fonctions, `readerAllow` et `writerAllow` qui permettront aux fonctions de lecture et d'écriture de s'exécuter de manière thread-safe. Vous souhaitez que cette gestion thread-safe aie les propriétés suivantes :
 
@@ -20,6 +20,62 @@ Déclarez les variables globales qui seront utilisées par votre programme. Vous
 *NOTES IMPORTANTES* : Ici, la solution de l'exercice en elle-même est déjà toute faite, il s'agit du code du writer/reader fournie par le cours (http://sites.uclouvain.be/SystInfo/notes/Theorie/html/Threads/coordination.html#probleme-des-readers-writers) avec priorité aux writers. Vous devrez juste remplacer les sections critiques par un appel aux fonctions passées comme pointeurs en argument.
 
 La difficulté de l'exercice réside dans l'écriture des tests. Vous devez réfléchir à des tests qui permettent de s'assurer qu'un writer est toujours exécuté seul, et que les writers ont priorité sur les readers. Le fait que les fonctions `readerAllow` et `writerAllow` utilisent des pointeurs de fonction n'est pas anodin : vous pouvez par exemple faire un writer bloquant à l'aide d'un mutex, puis de lancer un reader et vous assurer que le reader n'est pas exécuté tant que vous n'avez pas déverouillé le mutex du writer. Soyez créatifs dans vos tests et faites-en sorte que ceux-ci vérifient bien tous les cas limites du problème du reader/writer.
+
+### my-sem : Écriture de sémaphores
+
+*RESERVATION* : <1 groupe de max. 2 personnes>
+
+On souhaite écrire notre propre type de sémaphore à l'aide de mutex. On déclare pour ce faire les 2 structures suivantes :
+
+```
+typedef struct semProcess {
+    pthread_mutex_t mutex;
+    struct semProcess next;
+} sem_process_t;
+
+typedef struct mySem {
+    int value;
+    int capacity;
+    sem_process_t *head;
+} mysem_t;
+
+```
+
+Chaque sémaphore contient une valeur et une liste de processus bloqués. 
+
+Écrivez une fonction `int mysem_init(mysem_t *sem, unsigned int value);` qui assigne à `value` et `capacity` `sem` la valeur de l'argument `value` et initialise à `NULL` la liste des processus bloqués.
+
+Écrivez une fonction `int mysem_wait(mysem_t *sem);` qui bloque le fil d'exécution si `value` de `sem` vaut 0 et ajoute le processus à la **fin** de la liste des processus bloqués. Si `value` est plus grand que 0, il est décrémenté.
+
+Écrivez une fonction `int mysem_post(mysem_t *sem);` qui incrémente `value` de `sem` si aucun autre processus n'est bloqué, et sinon débloque le premier processus de la liste des processus bloqués. `value` ne peut jamais excéder `capacity`.
+
+Écrivez une fonction `mysem_close(mysem_t *sem);` qui libère toutes les ressourcées associées à un sémaphore. Si ce sémaphore a des processus bloqués, il les libère.
+
+*Tests imposés :* Vous devez tester les 4 fonctions. Il est important de tester le flux d'exécution, s'assurer que `sem_wait` est bien bloquant quand `value` vaut 0 et qu'il ajoute le processus bloqué à la fin de la liste, que `sem_post` va bien chercher le premier élément bloqué de la liste, que `value` n'excède jamais `capacity`, que `mysem_init` initialise proprement la sémaphore avec les bonnes valeurs et que `mysem_close` libère toutes les ressources correctement. 
+Pour la vérification de la libération des ressources, utilisez le mécanisme de LD_PRELOAD pour s'assurer que le nombre d'appels à `free` correspond bien au nombre de processus bloqués dans la liste (et que le mutex de chacun de ces processus bloqués est bien déverrouillé !), de même, testez aussi le cas où vous faites échouer `malloc`.
+
+### pgcd : Plus Grand Commun Diviseur
+
+*RESERVATION* : <1 groupe de max. 2 personnes>
+
+On cherche à calculer le plus grand commun diviseur de deux très grands nombres. Pour ce faire, on calcule tous les diviseurs de chacun des 2 nombres, et on regarde quel est leur PGCD. Pour ce faire, on déclare la liste chaînée suivante, permettant d'enregistrer en mémoire les diviseurs d'un nombre :
+
+```
+struct Node {
+    unsigned int divisor;
+    struct Node *next;
+};
+```
+
+Écrivez une fonction `struct Node *factorize(unsigned int n)` qui retourne la liste chaînée contenant tous les diviseurs du nombre `n` dans l'ordre décroissant.
+
+Écrivez une fonction `unsigned int gcd(unsigned int a, unsigned int b)` qui va lancer l'exécution de `factorize` pour `a` et `b` dans 2 threads différents et va extraire des deux listes renvoyées le PGCD. Le nombre 1 est considéré comme un diviseur. Cette fonction renvoie 0 si une erreur s'est produite.
+
+*Tests imposés :* Il y a quelques points auxquels il faut faire attention en plus de tester les valeurs renvoyées par `gcd`.
+- Écrire des tests pour `factorize`
+- Utiliser le mécanisme de LD_PRELOAD pour compter le nombre d'appels à `pthread_create` ou `pthread_join` et s'assurer que 2 threads ont bien été créés.
+- Utiliser le mécanisme de LD_PRELOAD pour s'assurer que le nombre d'appels à malloc est égal au nombre d'appels à free et est égal à la somme des diviseurs des 2 nombres (soit la somme des tailles des listes chainées).
+- Egalement à l'aide du mécanisme de LD_PRELOAD, faire échouer malloc ou `pthread_create` et s'assurer que `gcd` retourne alors 0.
 
 ### insertion-sort : Tri par insertion
 
