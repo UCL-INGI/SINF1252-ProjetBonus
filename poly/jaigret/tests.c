@@ -147,9 +147,8 @@ void test_derivee_4(void)
 // @racine:test_racine_1 => [La fonction racine ne reagis pas correctement a un polynome entier de degre 9.]
 void test_racine_1(void)
 {
-  double sol = -1.3386;
-  double test = sol - racine((test1), -1);
-  int ass_less = fabs(test) < threshold;
+  double test = racine(test1, -1);
+  int ass_less = fabs(eval(test1,test)) < threshold;
   CU_ASSERT(ass_less);
 }
 
@@ -157,38 +156,26 @@ void test_racine_1(void)
 // @racine:test_racine_2 => [La fonction racine ne reagis pas correctement a un polynome non-entier de degre 9.]
 void test_racine_2(void)
 {
-  double sol[] = { -62.1748, -660.4536,   13.8700,  232.6128};
-  double test = 0;
-  for (int i = 0; i < 4; i++) {
-    test += sol[i] - eval(derivee(test2), x[i]);
-  }
-  int ass_less = fabs(test) < threshold;
+  double test = racine(test2, 3);
+  int ass_less = fabs(eval(test2,test)) < threshold;
   CU_ASSERT(ass_less);
 }
 
-/* Tests pour savoir si derivee reagis normalement a la troisieme fonction*/
-// @derivee:test_derivee_3 => [La fonction derivee ne reagis pas correctement a un polynome entier negatif.]
-void test_derivee_3(void)
+/* Tests pour savoir si racine reagis normalement a la troisieme fonction*/
+// @racine:test_racine_3 => [La fonction racine ne reagis pas correctement a un polynome entier negatif.]
+void test_racine_3(void)
 {
-  double sol[] = {-1,    -3,     1,     3};
-  double test = 0;
-  for (int i = 0; i < 4; i++) {
-    test += sol[i] - eval(derivee(test3), x[i]);
-  }
-  int ass_less = fabs(test) < threshold;
+  double test = racine(test3, 2);
+  int ass_less = fabs(eval(test3,test)) < threshold;
   CU_ASSERT(ass_less);
 }
 
-/* Tests pour savoir si derivee reagis normalement a la quatrieme fonction*/
-// @derivee:test_derivee_4 => [La fonction derivee ne reagis pas correctement a un polynome nul.]
-void test_derivee_4(void)
+/* Tests pour savoir si racine reagis normalement a la quatrieme fonction*/
+// @racine:test_racine4 => [La fonction racine ne reagis pas correctement a un polynome nul.]
+void test_racine_4(void)
 {
-  double sol[] = {0.0, 0.0, 0.0, 0.0};
-  double test = 0;
-  for (int i = 0; i < 4; i++) {
-    test += sol[i] - eval(derivee(test4), x[i]);
-  }
-  int ass_less = fabs(test) < threshold;
+  double test = racine(test4, 3);
+  int ass_less = fabs(eval(test4,test)) < threshold;
   CU_ASSERT(ass_less);
 }
 
@@ -230,6 +217,10 @@ int main()
        (NULL == CU_add_test(pSuite, "Derivee Func 2",test_derivee_2)) ||
        (NULL == CU_add_test(pSuite, "Derivee Func 3",test_derivee_3)) ||
        (NULL == CU_add_test(pSuite, "Derivee Func 4",test_derivee_4)) ||
+       (NULL == CU_add_test(pSuite, "Racine Func 1",test_racine_1)) ||
+       (NULL == CU_add_test(pSuite, "Racine Func 2",test_racine_2)) ||
+       (NULL == CU_add_test(pSuite, "Racine Func 3",test_racine_3)) ||
+       (NULL == CU_add_test(pSuite, "Racine Func 4",test_racine_4))
      )
    {
      CU_cleanup_registry();

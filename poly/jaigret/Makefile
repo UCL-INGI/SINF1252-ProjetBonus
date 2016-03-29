@@ -12,7 +12,7 @@ student_code.o: student_code.c student_code.h
 	@$(CC) -c student_code.c -o student_code.o
 
 tests.o: tests.c student_code.h
-	@$(CC) -c tests.c $(FLAG) -o tests.o
+	@$(CC) -c tests.c -o tests.o $(FLAG)
 
 clean:
 	@rm -rf *.o
