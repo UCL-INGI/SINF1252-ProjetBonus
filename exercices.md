@@ -1,8 +1,85 @@
 # Liste des exercices proposés
 
+### reader-writer : Gestion de readers/writers
+
+*RESERVATION* : <1 groupe de max. 2 personnes>
+
+Vous développez un système de cache générique qui permet d'associer à un identifiant entier unique un pointeur vers un objet quelconque en mémoire. Vous souhaitez que votre cache soit thread-safe. Cependant, vu la structure de votre programme, la lecture ou l'écriture d'un élément dans le cache peut se faire via différentes fonctions différentes. Vous souhaitez alors coder 2 fonctions, `readerAllow` et `writerAllow` qui permettront aux fonctions de lecture et d'écriture de s'exécuter de manière thread-safe. Vous souhaitez que cette gestion thread-safe aie les propriétés suivantes :
+
+- Il ne peut y avoir qu'un seul writer qui accède à la base de données à tout moment
+- Un writer doit toujours avoir la priorité sur un reader s'ils tentent simultanément d'accéder au cache
+
+Déclarez les variables globales qui seront utilisées par votre programme. Vous avez droit aux fonctions des headers pthread.h et semaphore.h.
+
+Écrivez une fonction d'initialisation `void initRW()` qui initialisera les structures globales que vous avez déclarées précédemment. Cette fonction sera lancée en même temps que l'initialisation du cache.
+
+Écrivez une fonction `void *readerAllow(int key, void *(*reader)(int key))` qui exécutera de manière thread-safe la fonction `reader` avec la clé passée en argument à `readerAllow` et renverra le résultat fourni par `reader`.
+
+Écrivez une fonction `void writerAllow(int key, int value, void *(*writer)(int key, int value))` qui exécutera de manière thread-safe la fonction `writer` avec la clé et la valeur passées en argument à `writerAllow`.
+
+*NOTES IMPORTANTES* : Ici, la solution de l'exercice en elle-même est déjà toute faite, il s'agit du code du writer/reader fournie par le cours (http://sites.uclouvain.be/SystInfo/notes/Theorie/html/Threads/coordination.html#probleme-des-readers-writers) avec priorité aux writers. Vous devrez juste remplacer les sections critiques par un appel aux fonctions passées comme pointeurs en argument.
+
+La difficulté de l'exercice réside dans l'écriture des tests. Vous devez réfléchir à des tests qui permettent de s'assurer qu'un writer est toujours exécuté seul, et que les writers ont priorité sur les readers. Le fait que les fonctions `readerAllow` et `writerAllow` utilisent des pointeurs de fonction n'est pas anodin : vous pouvez par exemple faire un writer bloquant à l'aide d'un mutex, puis de lancer un reader et vous assurer que le reader n'est pas exécuté tant que vous n'avez pas déverouillé le mutex du writer. Soyez créatifs dans vos tests et faites-en sorte que ceux-ci vérifient bien tous les cas limites du problème du reader/writer.
+
+### my-sem : Écriture de sémaphores
+
+*RESERVATION* : <1 groupe de max. 2 personnes>
+
+On souhaite écrire notre propre type de sémaphore à l'aide de mutex. On déclare pour ce faire les 2 structures suivantes :
+
+```
+typedef struct semProcess {
+    pthread_mutex_t mutex;
+    struct semProcess next;
+} sem_process_t;
+
+typedef struct mySem {
+    int value;
+    int capacity;
+    sem_process_t *head;
+} mysem_t;
+
+```
+
+Chaque sémaphore contient une valeur et une liste de processus bloqués. 
+
+Écrivez une fonction `int mysem_init(mysem_t *sem, unsigned int value);` qui assigne à `value` et `capacity` `sem` la valeur de l'argument `value` et initialise à `NULL` la liste des processus bloqués.
+
+Écrivez une fonction `int mysem_wait(mysem_t *sem);` qui bloque le fil d'exécution si `value` de `sem` vaut 0 et ajoute le processus à la **fin** de la liste des processus bloqués. Si `value` est plus grand que 0, il est décrémenté.
+
+Écrivez une fonction `int mysem_post(mysem_t *sem);` qui incrémente `value` de `sem` si aucun autre processus n'est bloqué, et sinon débloque le premier processus de la liste des processus bloqués. `value` ne peut jamais excéder `capacity`.
+
+Écrivez une fonction `mysem_close(mysem_t *sem);` qui libère toutes les ressourcées associées à un sémaphore. Si ce sémaphore a des processus bloqués, il les libère.
+
+*Tests imposés :* Vous devez tester les 4 fonctions. Il est important de tester le flux d'exécution, s'assurer que `sem_wait` est bien bloquant quand `value` vaut 0 et qu'il ajoute le processus bloqué à la fin de la liste, que `sem_post` va bien chercher le premier élément bloqué de la liste, que `value` n'excède jamais `capacity`, que `mysem_init` initialise proprement la sémaphore avec les bonnes valeurs et que `mysem_close` libère toutes les ressources correctement. 
+Pour la vérification de la libération des ressources, utilisez le mécanisme de LD_PRELOAD pour s'assurer que le nombre d'appels à `free` correspond bien au nombre de processus bloqués dans la liste (et que le mutex de chacun de ces processus bloqués est bien déverrouillé !), de même, testez aussi le cas où vous faites échouer `malloc`.
+
+### pgcd : Plus Grand Commun Diviseur
+
+*RESERVATION* : <1 groupe de max. 2 personnes>
+
+On cherche à calculer le plus grand commun diviseur de deux très grands nombres. Pour ce faire, on calcule tous les diviseurs de chacun des 2 nombres, et on regarde quel est leur PGCD. Pour ce faire, on déclare la liste chaînée suivante, permettant d'enregistrer en mémoire les diviseurs d'un nombre :
+
+```
+struct Node {
+    unsigned int divisor;
+    struct Node *next;
+};
+```
+
+Écrivez une fonction `struct Node *factorize(unsigned int n)` qui retourne la liste chaînée contenant tous les diviseurs du nombre `n` dans l'ordre décroissant.
+
+Écrivez une fonction `unsigned int gcd(unsigned int a, unsigned int b)` qui va lancer l'exécution de `factorize` pour `a` et `b` dans 2 threads différents et va extraire des deux listes renvoyées le PGCD. Le nombre 1 est considéré comme un diviseur. Cette fonction renvoie 0 si une erreur s'est produite.
+
+*Tests imposés :* Il y a quelques points auxquels il faut faire attention en plus de tester les valeurs renvoyées par `gcd`.
+- Écrire des tests pour `factorize`
+- Utiliser le mécanisme de LD_PRELOAD pour compter le nombre d'appels à `pthread_create` ou `pthread_join` et s'assurer que 2 threads ont bien été créés.
+- Utiliser le mécanisme de LD_PRELOAD pour s'assurer que le nombre d'appels à malloc est égal au nombre d'appels à free et est égal à la somme des diviseurs des 2 nombres (soit la somme des tailles des listes chainées).
+- Egalement à l'aide du mécanisme de LD_PRELOAD, faire échouer malloc ou `pthread_create` et s'assurer que `gcd` retourne alors 0.
+
 ### insertion-sort : Tri par insertion
 
-*RESERVATION* : <1 personne>, Siciliano Damiano-Joseph
+*RESERVATION* : Devillez Henri, Siciliano Damiano-Joseph
 
 On désire implémenter un algorithme de tri par insertion sur un tableau de N entiers, le tableau et sa taille étant passés en argument.
 
@@ -19,7 +96,7 @@ _Tests imposés :_ Aucun.
 
 ### matrix-mult : Multiplication de matrices
 
-*RESERVATION* : <1 personne>, <1 personne>
+*RESERVATION* : Adrien BALLET 20971400, Sébastien MOTTET 18521400
 
 Écrivez une fonction `int access(int *A, int taille, int ordonnee, int abscisse);` qui renvoie l'élément d'abscisse et d'ordonnée indiquées dans une matrice carrée `taille x taille` d'entiers (il s'agit donc de l'élément A\[ordonnee][abscisse]).
 
@@ -29,7 +106,7 @@ _Tests imposés :_ Aucun.
 
 ### poly : Polynomes
 
-*RESERVATION* : <1 personne>, <1 personne>
+*RESERVATION* : Maxime Dimidschstein 62641400, AIGRET Julien 83431300
 
 On souhaite gérer des polynômes réels de degré inférieur ou égal à 10 en utilisant la structure suivante :
 
@@ -50,7 +127,7 @@ _Tests imposés_ : Les tests à réaliser ici sont intuitifs, il faut toujours s
 
 ### bookstore : Gestion d'une librairie
 
-*RESERVATION* : <1 groupe de 2 personnes>
+*RESERVATION* : Thomas Wirtgen 1331-1400 & Florent Mabille 4456-1400, 
 
 On souhaite gérer le catalogue d'une librairie dans lequel chaque livre est identifié par son auteur et son titre. La structure de données choisie est la suivante : il y a une liste chaînée d'auteurs dont chaque élément pointe vers une liste chaînée d'ouvrages.
 
@@ -79,7 +156,7 @@ _Tests imposés_ : Outre les tests classiques, assurez-vous que la fonction `add
 
 ### btree-access : Parcours d'un arbre binaire de recherche
 
-*RESERVATION* : <1 personne>, <1 personne>
+*RESERVATION* : Bertrand Van Ouytsel Charles-Henry 15221400, William Salame 50691400
 
 On souhaite parcourir un arbre binaire de recherche. Un arbre de recherche binaire est une structure de données où chaque nœud possède une clé et une valeur. En outre, chaque nœud peut avoir 2 nœuds fils : un à gauche dont la clé est toujours inférieure à la sienne, et un à droite dont la clé est toujours supérieure à la sienne. Autrement dit si vous êtes à un nœud dont la clé vaut 10 et que vous cherchez un nœud dont la clé vaut 5, vous savez que vous devez descendre à gauche pour espérer trouver un éventuel nœud dont la clé vaut 5.
 
@@ -103,17 +180,17 @@ _Tests imposés_ : Les tests pour `has_key' devraient être assez intuitifs. Pou
 
 ### hexadecimal : Conversion d'un unsigned int vers hexadécimal et vice-versa
 
-*RESERVATION* : <1 personne>, <1 personne>
+*RESERVATION* : Sébastien Strebelle 8143-1300, Simon HICK 8853-1200
 
 On souhaite convertir un entier non signé vers sa représentation hexadécimale. Par exemple l'entier 42 vaut "2A" en hexadécimal. De même, on souhaite faire la conversion dans l'autre sens.
 
-Écrivez une fonction `unsigned int int_to_hex(char *hex)` qui prend en argument une chaîne de caractères représentant un nombre hexadécimal (cette chaîne ne peut comporter que les chiffres de 0 à 9 et les lettres A à F.
+Écrivez une fonction `unsigned int hex_to_int(char *hex)` qui prend en argument une chaîne de caractères représentant un nombre hexadécimal (cette chaîne ne peut comporter que les chiffres de 0 à 9 et les lettres A à F).
 
-Écrivez une fonction `char *hex_to_int(unsigned int)` qui prend en argument un entier non-signé et renvoie sa représentation hexadécimale.
+Écrivez une fonction `char *int_to_hex(unsigned int value, char *dest)` qui prend en argument un entier non-signé et enregistre sa représentation hexadécimale dans la chaîne de caractères indiquée par `dest`. On suppose que `dest` est un tableau de 9 char au minimum. La fonction devra toujours renvoyer le pointeur `dest`.
 
 ### bitwise-ops : Opérations sur les bits
 
-*RESERVATION* : <1 personne>, <1 personne>
+*RESERVATION* : Robin HORMAUX 5666-1300, Maxime WATTIAUX 6558-1400
 
 On souhaite effectuer des opérations spécifiques sur certains bits d'un entier non-signé.
 
@@ -135,27 +212,27 @@ _Tests imposés_ : Aucun.
 
 *RESERVATION* : Thomas Beznik & Vianney Coppé
 
-On souhaite indexer un texte afin de savoir quels mots reviennent le plus fréquemment dans un corpus. Le processus d'indexation se fait en 2 phases : on compte d'abord le nombre d'occurrences de chaque mot, et on supprime ensuite de la table d'indexation tous les mots qui n'ont pas été indexés au moins `N` fois.
+On souhaite indexer un texte afin de savoir quels mots reviennent le plus fréquemment dans un corpus. Le processus d'indexation se fait en 2 phases : on compte d'abord le nombre d'occurrences de chaque mot, et on supprime ensuite de la table d'indexation tous les mots qui n'ont pas été indexés au moins `N` fois. Le corpus est une chaîne de caractères composées uniquement de minuscules et où le seul délimiteur est un espace (pas de ponctuation).
 
 On définit la structure suivante représentant une entrée de l'index :
 ```
 typedef struct indexEntry {
-    char *word;
+    char word[26];
     int count; //nombre de fois qu'un mot est apparu dans le corpus
     struct indexEntry *next;
 } Entry;
 ```
 
-Écrivez une fonction `Entry *build_index(char *corpus)` qui renvoie l'index associé au corpus passé en paramètre.
+Écrivez une fonction `Entry *build_index(char *corpus)` qui renvoie l'index associé au corpus passé en paramètre. Vous pouvez modifier la chaine passée en argument.
 
-Écrivez une fonction `void filter_index(int treshold)` qui supprime de l'index tous les mots qui n'ont pas été recensés au moins `treshold` fois.
+Écrivez une fonction `void filter_index(Entry *index_head, int treshold)` qui supprime de l'index tous les mots qui n'ont pas été recensés au moins `treshold` fois.
 
 _Tests imposés_ : Réécrivez la fonction `malloc` pour vérifier que l'étudiant gère le cas où `malloc` renvoie NULL, pensez à intercepter un éventuel segfault lorsque vous faites "bugger" `malloc`. Réécrivez la fonction `free` afin de compter le nombre d'appels à `free` effectués pour s'assurer que l'étudiant libère bien de la mémoire les entrées de l'index qui sont éliminées par le filtre. Assurez-vous que l'étudiant ne fait pas de buffer-overflow, c'est-à-dire qu'il ne dépasse pas par la droite la chaîne "corpus" : écrivez dans un test unitaire le corpus à la fin d'une page mémoire et mettez la page mémoire suivante en PROT_NONE, et pensez à intercepter un éventuel segfault.
 
 ### rpn-calc : Calculatrice en notation polonaise inversée
 
 
-*RESERVATION* : <1 personne>, <1 personne>
+*RESERVATION* : Mathias NOVAK 41501400, Margerie Huet
 
 La notation polonaise inversée permet d'écrire de façon non-ambigüe sans parenthèses des formules arithmétiques. Par exemple, le calcul `((1 + 2) × 4) + 3` peut être noté `1 2 + 4 * 3 +` en notation polonaise inverse, ou encore `3 4 1 2 + * +`. L'avantage de cette notation est qu'elle est très facilement compréhensible par un ordinateur : on imagine une pile où on peut soit ajouter un élément sur la pile, soit retirer le dernier élément ajouté. En parcourant la formule arithmétique, si on rencontre un nombre, on l'ajoute à la pile, si on rencontre une opérande (par ex. le symbole '+'), on retire les 2 derniers éléments de la pile, on en fait la somme et on ajoute le résultat à la pile.
 
@@ -169,3 +246,4 @@ Vous pouvez supposer que les exemples utilisés par les tests feront en sorte qu
 Écrivez une fonction `double rpn(char *expr)` qui calcule l'expression en notation polonaise inverse contenue dans `expr` et retourne le résultat. Vous pouvez supposer que `expr` contiendra toujours une expression correcte où il ne restera jamais qu'un seul élément sur la pile à la fin de l'exécution. Indice : utilisez la fonction `strtok(3)` pour séparer les différents éléments de la chaîne et la fonction `atof(3)` pour convertir l'éventuel nombre rencontré en double. Exemple : "4 2 5 * + 1 3 2 * + /" est censé renvoyer 2. Les opérandes possibles sont + (addition), - (soustraction), * (multiplication) et / (division).
 
 _Tests imposés_ : Faites bien attention à ne tester que des expressions valides. Testez bien les différentes opérandes et réalisez également des tests uniquement pour les fonctions `pop` et `push`.
+

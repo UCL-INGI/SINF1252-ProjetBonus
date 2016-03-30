@@ -92,7 +92,7 @@ void test_calloc2_3(void) {
     if(setjmp(label_test_calloc2_3)==0) {
         calloc2(42, 42);
     }
-    else if {
+    else {
         /* IMPORTANT ! On remet let_malloc_fail à 0 pour que CUnit puisse réutiliser malloc par la suite.
          * Ici, si on ne pense pas à remettre cette variable à 0, CUnit ne prend pas en compte l'échec du test. */
         let_malloc_fail = 0; 
