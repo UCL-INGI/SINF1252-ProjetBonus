@@ -56,7 +56,7 @@ Pour la vérification de la libération des ressources, utilisez le mécanisme d
 
 ### pgcd : Plus Grand Commun Diviseur
 
-*RESERVATION* : <1 groupe de max. 2 personnes>
+*RESERVATION* : kevin STOFFLER 66271200
 
 On cherche à calculer le plus grand commun diviseur de deux très grands nombres. Pour ce faire, on calcule tous les diviseurs de chacun des 2 nombres, et on regarde quel est leur PGCD. Pour ce faire, on déclare la liste chaînée suivante, permettant d'enregistrer en mémoire les diviseurs d'un nombre :
 
