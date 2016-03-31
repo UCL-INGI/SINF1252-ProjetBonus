@@ -23,7 +23,7 @@ La difficulté de l'exercice réside dans l'écriture des tests. Vous devez réf
 
 ### my-sem : Écriture de sémaphores
 
-*RESERVATION* : <Dubray Alexandre>
+*RESERVATION* : Dubray Alexandre, <1 groupe de max. 2 personnes>
 
 On souhaite écrire notre propre type de sémaphore à l'aide de mutex. On déclare pour ce faire les 2 structures suivantes :
 
