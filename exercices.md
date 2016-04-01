@@ -192,11 +192,11 @@ On souhaite convertir un entier non signé vers sa représentation hexadécimale
 
 *RESERVATION* : Robin HORMAUX 5666-1300, Maxime WATTIAUX 6558-1400
 
-On souhaite effectuer des opérations spécifiques sur certains bits d'un entier non-signé.
+On souhaite effectuer des opérations spécifiques sur certains bits d'un entier non-signé de 32 bits.
 
-Écrivez une fonction `unsigned char get_bit(unsigned int x, int pos)` qui renvoie le bit à la position `pos` de `x`.
+Écrivez une fonction `unsigned char get_bit(unsigned int x, unsigned int pos)` qui renvoie le bit à la position `pos` de `x`.
 
-Écrivez une fonction `unsigned int set_bit(unsigned int x, int pos, unsigned char value)` qui met le bit à la position `pos` de `x` à la valeur `value` (qui ne pourra jamais être que 0 ou 1).
+Écrivez une fonction `unsigned int set_bit(unsigned int x, unsigned int pos, unsigned char value)` qui met le bit à la position `pos` de `x` à la valeur `value` (qui ne pourra jamais être que 0 ou 1).
 
 Écrivez une fonction `unsigned char get_3_leftmost_bits(unsigned int x)` qui renvoie les 3 bits les plus à gauches de `x`. Par exemple, si on a la séquence 11011001, la fonction doit renvoyer la valeur correspondant à 00000110.
 
@@ -204,7 +204,7 @@ On souhaite effectuer des opérations spécifiques sur certains bits d'un entier
 
 Écrivez une fonction `unsigned int unset_first_bit(unsigned int x)` qui met à 0 le premier bit à 1 qu'il trouve en partant de la gauche, et ne fait rien s'il n'y a pas de bit mis à 1.
 
-Écrivez une fonction `unsigned int cycle_bits(unsigned int x, int n)` qui déplace tous les bits de `n` places vers la gauche selon la formule `x[(i+n)%32] = x[i]` où `x[i]` représente le ième bit de `x`.
+Écrivez une fonction `unsigned int cycle_bits(unsigned int x, unsigned int n)` qui déplace tous les bits de `n` places vers la gauche selon la formule `x[(i+n)%32] = x[i]` où `x[i]` représente le ième bit de `x`.
 
 _Tests imposés_ : Aucun.
 
