@@ -9,6 +9,6 @@ typedef struct indexEntry {
 
 Entry *build_index(char *corpus);
 
-void filter_index(Entry *index_head, int treshold);
+void filter_index(Entry **index_head, int treshold);
 
 #endif

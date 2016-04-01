@@ -13,7 +13,7 @@
 int malloc_fail = 0;
 int free_count = 0;
 
-// @build_index:test_build_index_1 => [Index mal initialise pour un seul mot.]
+// @build_index:test_build_index_1 => [L'index est mal construit pour le corpus "lorem".]
 void test_build_index_1(void)
 {
 	char s[6]="lorem";
@@ -29,7 +29,7 @@ void test_build_index_1(void)
 	free(first);
 }
 
-// @build_index:test_build_index_2 => [Le next du premier mot ne pointe pas vers le deuxième mot.]
+// @build_index:test_build_index_2 => [Dans un corpus avec deux mots différents, la variable next du premier indexEntry ne pointe pas vers le deuxième mot.]
 void test_build_index_2(void)
 {
 	char s[12]="lorem ipsum";
@@ -39,21 +39,22 @@ void test_build_index_2(void)
 	
 	Entry *second = first->next;
 	CU_ASSERT_PTR_NOT_NULL(second);
-    CU_ASSERT_STRING_EQUAL(second->word,"ipsum");
+    if (second != NULL)
+        CU_ASSERT_STRING_EQUAL(second->word,"ipsum");
     
     free(first);
     free(second);
 }
 
-// @build_index:test_build_index_3 => [Le count d'un mot répété deux fois n'est pas updaté.]
+// @build_index:test_build_index_3 => [La variable count d'un mot présent cinq fois ne vaut pas 5.]
 void test_build_index_3(void)
 {
-	char s[12]="lorem lorem";
+	char s[50]="lorem lorem lorem lorem lorem";
 	char *str=s;
 	
     Entry *first = build_index(str);
 	
-	CU_ASSERT_EQUAL(first->count,2);
+	CU_ASSERT_EQUAL(first->count,5);
 	
 	free(first);
 }
@@ -67,7 +68,7 @@ void sig_handler(int signo)
     longjmp(label_test_build_index_4,1);
 }
 
-// @build_index:test_build_index_4 => [La fonction build_index ne prend pas en compte le fait que malloc puisse échouer (renvoyer NULL).]
+// @build_index:test_build_index_4 => [La fonction build_index ne prend pas en compte le fait que malloc puisse échouer (càd renvoyer NULL).]
 void test_build_index_4(void) {
 	malloc_fail = 1; //On indique qu'on veut que malloc utilisé par build_index échoue
 	char s[12]="lorem ipsum";
@@ -131,7 +132,7 @@ void test_build_index_5(void)
         CU_FAIL("Impossible d'enregistrer un signal handler.");
         return;
     }
-
+    
     //On définit ici un jump avec le label label_test_build_index_5 qui attend le paramètre 0 (par défaut)
     if(setjmp(label_test_build_index_5)==0) {
 		build_index(str);
@@ -154,11 +155,17 @@ void test_filter_index_1(void)
 	Entry *first=(Entry*) malloc(sizeof(Entry));
 	Entry *second=(Entry*) malloc(sizeof(Entry));
 	Entry *third=(Entry*) malloc(sizeof(Entry));
+
+    if (first == NULL || second == NULL || third == NULL) {
+        CU_FAIL("La mémoire n'a pas pu être allouée pour le test test_filter_index_1.");
+        return;
+    }
+
     *first = (Entry){"lorem", 2, second};
 	*second = (Entry){"ipsum", 2, third};
 	*third = (Entry){"dolor", 1, NULL};
 	
-	filter_index(first,2);
+	filter_index(&first,2);
 	
 	CU_ASSERT_STRING_EQUAL(first->word,"lorem");
 	CU_ASSERT_STRING_EQUAL(second->word,"ipsum");
@@ -176,6 +183,12 @@ void test_filter_index_2(void)
 	Entry *ent3 = (Entry*) malloc(sizeof(Entry));
 	Entry *ent4 = (Entry*) malloc(sizeof(Entry));
 	Entry *ent5 = (Entry*) malloc(sizeof(Entry));
+
+    if (ent1 == NULL || ent2 == NULL || ent3 == NULL || ent4 == NULL || ent5 == NULL) {
+        CU_FAIL("La mémoire n'a pas pu être allouée pour le test test_filter_index_2.");
+        return;
+    }
+
     *ent1 = (Entry){"lorem", 2, ent2};
 	*ent2 = (Entry){"ipsum", 2, ent3};
 	*ent3 = (Entry){"dolor", 1, ent4};
@@ -183,14 +196,38 @@ void test_filter_index_2(void)
 	*ent5 = (Entry){"amet", 1, NULL};
 	
 	free_count = 0;
-	filter_index(ent1,2);
-	printf("%d\n",free_count);
+	filter_index(&ent1,2);
 	
 	CU_ASSERT_EQUAL(free_count,3);
 	free(ent1);
 	free(ent2);
 }
 
+// @filter_index:test_filter_index_3 => [filter_index ne met pas `index_head` à NULL lorsque toute la liste est supprimée.]
+void test_filter_index_3(void) {
+	Entry *ent1 = (Entry*) malloc(sizeof(Entry));
+	Entry *ent2 = (Entry*) malloc(sizeof(Entry));
+	Entry *ent3 = (Entry*) malloc(sizeof(Entry));
+	Entry *ent4 = (Entry*) malloc(sizeof(Entry));
+	Entry *ent5 = (Entry*) malloc(sizeof(Entry));
+
+    if (ent1 == NULL || ent2 == NULL || ent3 == NULL || ent4 == NULL || ent5 == NULL) {
+        CU_FAIL("La mémoire n'a pas pu être allouée pour le test test_filter_index_3.");
+        return;
+    }
+
+
+    *ent1 = (Entry){"lorem", 2, ent2};
+	*ent2 = (Entry){"ipsum", 2, ent3};
+	*ent3 = (Entry){"dolor", 1, ent4};
+	*ent4 = (Entry){"sit", 1, ent5};
+	*ent5 = (Entry){"amet", 1, NULL};
+	
+	filter_index(&ent1, 5);
+
+    CU_ASSERT_PTR_NULL(ent1);
+	
+}
 
 int main() {
     CU_pSuite pSuite = NULL;
@@ -214,7 +251,8 @@ int main() {
 	   NULL == CU_add_test(pSuite, "test_build_index_4", test_build_index_4) ||
 	   NULL == CU_add_test(pSuite, "test_build_index_5", test_build_index_5) ||
 	   NULL == CU_add_test(pSuite, "test_filter_index_1", test_filter_index_1) ||
-	   NULL == CU_add_test(pSuite, "test_filter_index_2", test_filter_index_2))
+	   NULL == CU_add_test(pSuite, "test_filter_index_2", test_filter_index_2) ||
+	   NULL == CU_add_test(pSuite, "test_filter_index_3", test_filter_index_3))
 
 	{
         CU_cleanup_registry();

@@ -15,7 +15,7 @@ Entry *add_to_index(char word[], Entry *index_head)
 		if(strcmp(current->word,word)==0)
 		{
 			current->count++;
-			// strncopy(current->word,word); 
+            // current->count = 1;
 			// Cette ligne fait echouer le test test_build_index_3
 			return index_head;
 		}
@@ -25,23 +25,26 @@ Entry *add_to_index(char word[], Entry *index_head)
 	
 	current=(Entry*) malloc(sizeof(Entry));
 	if(current==NULL)
-	// if(current==NULL && 0) 
+    //if (current == NULL && 0)
 	// Cette ligne fait echouer le test test_build_index_4
 	{
 		return NULL;
 	}
 	
 	strncpy(current->word,word,25);
-	// strcopy(current->word,"hello");
-	// Cette ligne fait echouer le test test_build_index_1 et le test test_build_index_2
-	current->word[25]='\0';
+
+	//strcpy(current->word,"hello");
+	// Cette ligne fait echouer les tests test_build_index_1/2/3
 	
+    current->word[25]='\0';
 	current->count=1; 
-	// current->count=0 
-	// Cette ligne fait echouer le test test_build_index_1
-	current->next=NULL;
+
+	// Cette ligne fait echouer les tests test_build_index_1/2/3
+	//current->count=0;
+
+	current->next = NULL;
 	
-	if(index_head==NULL)
+	if(index_head == NULL)
 	{
 		return current;
 	}
@@ -84,36 +87,40 @@ Entry *build_index(char *corpus)
 	return index_head;
 }
 
-void filter_index(Entry *index_head, int treshold)
+void filter_index(Entry **index_head, int treshold)
 {
-	if(index_head==NULL)
+	if(*index_head==NULL)
 	{
 		return;
 	}
 
 	Entry *previous=NULL;
-	Entry *current=index_head;
+	Entry *current=*index_head;
 	Entry *delete=NULL;
 	
 	while(current!=NULL)
 	{
-		if(current->count<treshold) 
-		// if(current->count<=treshold) 
+        // Si l'élément actuel doit être filtré
+		if(current->count < treshold) 
+		// if(current->count <= treshold) 
 		// Cette ligne fait echouer le test test_filter_index_1
 		{
-			if(current==index_head)
+			if(current==*index_head)
 			{
-				delete=current;
-				current=current->next;
+				delete = current;
+				current = current->next;
 				free(delete);
-				index_head=current;
+                
+                //Supprimer cette ligne fait échouer le test test_filter_index_3
+				*index_head = current;
 			}
 			else
 			{
 				delete=current;
 				current=current->next;
 				free(delete); // Supprimer cette ligne fait echouer le test test_filter_index_2
-				previous->next=current;
+                if (previous != NULL)
+                    previous->next=current;
 			}
 		}
 		else
