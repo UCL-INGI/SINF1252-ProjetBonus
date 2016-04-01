@@ -192,7 +192,7 @@ On souhaite convertir un entier non signé vers sa représentation hexadécimale
 
 *RESERVATION* : Robin HORMAUX 5666-1300, Maxime WATTIAUX 6558-1400
 
-On souhaite effectuer des opérations spécifiques sur certains bits d'un entier non-signé de 32 bits.
+On souhaite effectuer des opérations spécifiques sur certains bits d'un entier non-signé de 32 bits. Lorsque l'on parle de position, l'indice 0 correspond au bit le plus faible, et 31 au bit le plus fort.
 
 Écrivez une fonction `unsigned char get_bit(unsigned int x, unsigned int pos)` qui renvoie le bit à la position `pos` de `x`.
 
