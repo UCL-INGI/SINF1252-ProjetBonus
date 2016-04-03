@@ -12,4 +12,4 @@ typedef struct cellLivre {
 cellAuteur *existe(cellAuteur *librairie, char *strAuteur);
 int compteOuvrage(cellAuteur *librairie, char *strAuteur);
 void add(cellAuteur *librairie, char *strAuteur, char *strTitre);
-void supprimer(cellAuteur *librairie, char *strAuteur);
+void supprimer(cellAuteur **librairie, char *strAuteur);
