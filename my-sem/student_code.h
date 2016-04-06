@@ -1,6 +1,6 @@
 typedef struct semProcess {
     pthread_mutex_t mutex;
-    struct semProcess next;
+    struct semProcess *next;
 } sem_process_t;
 
 typedef struct mySem {
