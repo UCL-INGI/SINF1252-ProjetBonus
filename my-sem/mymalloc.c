@@ -1,4 +1,4 @@
-/* 
+/*  Fonction malloc pour les test unitaire de my-sem
 Copyright (C) 2016 Dubray Alexandre
 
 This program is free software: you can redistribute it and/or modify
