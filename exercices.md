@@ -172,7 +172,7 @@ typedef struct BSTreeNode {
 
 ![Arbre binaire](https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Binary_tree.svg/192px-Binary_tree.svg.png)
 
-Écrivez une fonction `int *has_key(Node root, int key)` qui vérifie si l'arbre binaire dont le sommet est le nœud root possède un nœud dont la clé vaut `key` et renvoie alors un pointeur vers `value` de ce nœud, renvoie `NULL` sinon.
+Écrivez une fonction `int has_key(Node root, int key)` qui vérifie si l'arbre binaire dont le sommet est le nœud root possède un nœud dont la clé vaut `key` et renvoie 1 si oui, renvoie 0 sinon.
 
 Écrivez une fonction `int compare(Node root_a, Node root_b)` qui vérifie si les 2 arbres binaires passés en argument sont identiques (ils ont la même structure et tous les nœuds possèdent la même paire clé/valeur). Renvoie 1 si les arbres sont identiques, 0 sinon. Indice : pensez récursivement.
 
