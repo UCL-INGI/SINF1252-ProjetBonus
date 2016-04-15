@@ -19,7 +19,7 @@
 #include <signal.h>
 #include <setjmp.h>
 
-#include "../student_code.h"
+#include "student_code.h"
 
 cellAuteur *lib = NULL; //variable globale qui contiendra un liste d'auteurs avec des livres pour tester la fonction existe()
 cellAuteur *lib1 = NULL; //variable globale qui contiendra un liste d'auteurs avec des livres pour tester la fonction compteOuvrage()
@@ -441,6 +441,7 @@ void test_suppression_premier_auteur(void)
   deleteALL(lib2);
 }
 
+// @supprimer:test_suppression_autre_auteur => [La fonction supprimer ne supprime pas correctement un auteur quelconque de la liste librairie]
 void test_suppression_autre_auteur(void)
 {
   setup_lib2();
