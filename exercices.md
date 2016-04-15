@@ -23,7 +23,7 @@ La difficulté de l'exercice réside dans l'écriture des tests. Vous devez réf
 
 ### my-sem : Écriture de sémaphores
 
-*RESERVATION* : <1 groupe de max. 2 personnes>
+*RESERVATION* : <Dubray Alexandre>, <1 groupe de max. 2 personnes>
 
 On souhaite écrire notre propre type de sémaphore à l'aide de mutex. On déclare pour ce faire les 2 structures suivantes :
 
@@ -56,7 +56,7 @@ Pour la vérification de la libération des ressources, utilisez le mécanisme d
 
 ### pgcd : Plus Grand Commun Diviseur
 
-*RESERVATION* : <1 groupe de max. 2 personnes>
+*RESERVATION* : kevin STOFFLER 66271200, <1 groupe de max. 2 personnes>
 
 On cherche à calculer le plus grand commun diviseur de deux très grands nombres. Pour ce faire, on calcule tous les diviseurs de chacun des 2 nombres, et on regarde quel est leur PGCD. Pour ce faire, on déclare la liste chaînée suivante, permettant d'enregistrer en mémoire les diviseurs d'un nombre :
 
@@ -150,7 +150,7 @@ typedef struct cellLivre {
 
 Écrivez une fonction `void add(cellAuteur *librairie, char *strAuteur, char *strTitre)` qui ajoute dans le catalogue un livre de l'auteur indiqué. L'auteur existe dans le catalogue.
 
-Écrivez une fonction `void supprimer(cellAuteur *librairie, char *strAuteur)` qui supprime du catalogue un auteur et tous ses livres. L'auteur existe dans le catalogue.
+Écrivez une fonction `void supprimer(cellAuteur **librairie, char *strAuteur)` qui supprime du catalogue un auteur et tous ses livres. L'auteur existe dans le catalogue.
 
 _Tests imposés_ : Outre les tests classiques, assurez-vous que la fonction `add` ne segfault pas lorsque vous lui indiquez un auteur dont la liste de livres est vide. Utilisez les fonctions `signal`, `sigsetjmp`et `siglongjmp` pour attraper un éventuel segfault dans `add` et pouvoir indiquer à l'utilisateur l'origine précise de ce segfault (il ne prend pas en compte le fait que la liste d'articles d'un auteur puisse être vide). Réécrivez également la fonction `free` pour vous assurer que l'étudiant utilise `supprimer` correctement : comptez le nombre d'appels à `free` effectués et assurez-vous que ce nombre correspond au nombre de structures qui ont dû être désallouées (1 pour l'auteur + le nombre de livres qu'il avait).
 
