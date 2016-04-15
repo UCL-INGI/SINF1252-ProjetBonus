@@ -50,10 +50,8 @@ unsigned int hex_to_int(char *hex)
 	}
 
 	//le bloc suivant fait échouer test_hex_to_int5
-	/*
 	char a =hex[i+1];
 	printf("%c\n",a ); 
-	*/
 
 	return number;
 }
@@ -62,13 +60,11 @@ char *int_to_hex(unsigned int number, char* dest)
 {
 
 	//le bloc suivant fait échouer test_int_to_hex4
-	/*
 	if(number==10601281)
 	{
 		char a = dest[10];
 		printf("%c\n",a );
 	}
-	*/
 
 	int i, length = 0;
 	unsigned int temp = number;

@@ -23,7 +23,7 @@ La difficulté de l'exercice réside dans l'écriture des tests. Vous devez réf
 
 ### my-sem : Écriture de sémaphores
 
-*RESERVATION* : <Dubray Alexandre>, <1 groupe de max. 2 personnes>
+*RESERVATION* : Dubray Alexandre
 
 On souhaite écrire notre propre type de sémaphore à l'aide de mutex. On déclare pour ce faire les 2 structures suivantes :
 
@@ -56,7 +56,7 @@ Pour la vérification de la libération des ressources, utilisez le mécanisme d
 
 ### pgcd : Plus Grand Commun Diviseur
 
-*RESERVATION* : kevin STOFFLER 66271200, <1 groupe de max. 2 personnes>
+*RESERVATION* : kevin STOFFLER 66271200
 
 On cherche à calculer le plus grand commun diviseur de deux très grands nombres. Pour ce faire, on calcule tous les diviseurs de chacun des 2 nombres, et on regarde quel est leur PGCD. Pour ce faire, on déclare la liste chaînée suivante, permettant d'enregistrer en mémoire les diviseurs d'un nombre :
 
@@ -172,7 +172,7 @@ typedef struct BSTreeNode {
 
 ![Arbre binaire](https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Binary_tree.svg/192px-Binary_tree.svg.png)
 
-Écrivez une fonction `int *has_key(Node root, int key)` qui vérifie si l'arbre binaire dont le sommet est le nœud root possède un nœud dont la clé vaut `key` et renvoie alors un pointeur vers `value` de ce nœud, renvoie `NULL` sinon.
+Écrivez une fonction `int has_key(Node root, int key)` qui vérifie si l'arbre binaire dont le sommet est le nœud root possède un nœud dont la clé vaut `key` et renvoie 1 si oui, renvoie 0 sinon.
 
 Écrivez une fonction `int compare(Node root_a, Node root_b)` qui vérifie si les 2 arbres binaires passés en argument sont identiques (ils ont la même structure et tous les nœuds possèdent la même paire clé/valeur). Renvoie 1 si les arbres sont identiques, 0 sinon. Indice : pensez récursivement.
 
@@ -192,19 +192,19 @@ On souhaite convertir un entier non signé vers sa représentation hexadécimale
 
 *RESERVATION* : Robin HORMAUX 5666-1300, Maxime WATTIAUX 6558-1400
 
-On souhaite effectuer des opérations spécifiques sur certains bits d'un entier non-signé.
+On souhaite effectuer des opérations spécifiques sur certains bits d'un entier non-signé de 32 bits. Lorsque l'on parle de position, l'indice 0 correspond au bit le plus faible, et 31 au bit le plus fort.
 
-Écrivez une fonction `char get_bit(unsigned int char, int pos)` qui renvoie le bit à la position `pos` de `x`.
+Écrivez une fonction `unsigned char get_bit(unsigned int x, unsigned int pos)` qui renvoie le bit à la position `pos` de `x`.
 
-Écrivez une fonction `unsigned char set_bit(unsigned int char, int pos, char value)` qui met le bit à la position `pos` de `x` à la valeur `value` (qui ne pourra jamais être que 0 ou 1).
+Écrivez une fonction `unsigned int set_bit(unsigned int x, unsigned int pos, unsigned char value)` qui met le bit à la position `pos` de `x` à la valeur `value` (qui ne pourra jamais être que 0 ou 1).
 
-Écrivez une fonction `unsigned char get_3_leftmost_bit(unsigned char x)` qui renvoie les 3 bits les plus à gauches de `x`. Par exemple, si on a la séquence 11011001, la fonction doit renvoyer la valeur correspondant à 00000110.
+Écrivez une fonction `unsigned char get_3_leftmost_bits(unsigned int x)` qui renvoie les 3 bits les plus à gauches de `x`. Par exemple, si on a la séquence 11011001, la fonction doit renvoyer la valeur correspondant à 00000110.
 
-Écrivez une fonction `unsigned char get_4_rightmost_bit(unsigned char x)` qui renvoie les 4 bits les plus à droite de `x`. 
+Écrivez une fonction `unsigned char get_4_rightmost_bits(unsigned int x)` qui renvoie les 4 bits les plus à droite de `x`. 
 
-Écrivez une fonction `unsigned char unset_first_bit(unsigned char x)` qui met à 0 le premier bit à 1 qu'il trouve en partant de la gauche, et ne fait rien s'il n'y a pas de bit mis à 1.
+Écrivez une fonction `unsigned int unset_first_bit(unsigned int x)` qui met à 0 le premier bit à 1 qu'il trouve en partant de la gauche, et ne fait rien s'il n'y a pas de bit mis à 1.
 
-Écrivez une fonction `unsigned char cycle_bits(unsigned char x, int n)` qui déplace tous les bits de `n` places vers la gauche selon la formule `x[(i+n)%8] = x[i]` où `x[i]` représente le ième bit de x.
+Écrivez une fonction `unsigned int cycle_bits(unsigned int x, unsigned int n)` qui déplace tous les bits de `n` places vers la gauche selon la formule `x[(i+n)%32] = x[i]` où `x[i]` représente le ième bit de `x`.
 
 _Tests imposés_ : Aucun.
 
@@ -212,7 +212,7 @@ _Tests imposés_ : Aucun.
 
 *RESERVATION* : Thomas Beznik & Vianney Coppé
 
-On souhaite indexer un texte afin de savoir quels mots reviennent le plus fréquemment dans un corpus. Le processus d'indexation se fait en 2 phases : on compte d'abord le nombre d'occurrences de chaque mot, et on supprime ensuite de la table d'indexation tous les mots qui n'ont pas été indexés au moins `N` fois. Le corpus est une chaîne de caractères composées uniquement de minuscules et où le seul délimiteur est un espace (pas de ponctuation).
+On souhaite indexer un texte afin de savoir quels mots reviennent le plus fréquemment dans un corpus. Le processus d'indexation se fait en 2 phases : on compte d'abord le nombre d'occurrences de chaque mot, et on supprime ensuite de la table d'indexation tous les mots qui n'ont pas été indexés au moins `N` fois. Le corpus est une chaîne de caractères composées uniquement de minuscules et où le seul délimiteur est un espace (pas de ponctuation). Votre programme n'est jamais censé produire d'erreurs de segmentation.
 
 On définit la structure suivante représentant une entrée de l'index :
 ```
@@ -225,7 +225,7 @@ typedef struct indexEntry {
 
 Écrivez une fonction `Entry *build_index(char *corpus)` qui renvoie l'index associé au corpus passé en paramètre. Vous pouvez modifier la chaine passée en argument.
 
-Écrivez une fonction `void filter_index(Entry *index_head, int treshold)` qui supprime de l'index tous les mots qui n'ont pas été recensés au moins `treshold` fois.
+Écrivez une fonction `void filter_index(Entry **index_head, int treshold)` qui supprime de l'index tous les mots qui n'ont pas été recensés au moins `treshold` fois.
 
 _Tests imposés_ : Réécrivez la fonction `malloc` pour vérifier que l'étudiant gère le cas où `malloc` renvoie NULL, pensez à intercepter un éventuel segfault lorsque vous faites "bugger" `malloc`. Réécrivez la fonction `free` afin de compter le nombre d'appels à `free` effectués pour s'assurer que l'étudiant libère bien de la mémoire les entrées de l'index qui sont éliminées par le filtre. Assurez-vous que l'étudiant ne fait pas de buffer-overflow, c'est-à-dire qu'il ne dépasse pas par la droite la chaîne "corpus" : écrivez dans un test unitaire le corpus à la fin d'une page mémoire et mettez la page mémoire suivante en PROT_NONE, et pensez à intercepter un éventuel segfault.
 
