@@ -148,7 +148,7 @@ typedef struct cellLivre {
 
 Écrivez une fonction `int compteOuvrage(cellAuteur *librairie, char *strAuteur)` qui compte le nombre de livres d'un auteur dans la liste `librairie`.
 
-Écrivez une fonction `void add(cellAuteur *librairie, char *strAuteur, char *strTitre)` qui ajoute dans le catalogue un livre de l'auteur indiqué. L'auteur existe dans le catalogue.
+Écrivez une fonction `void add(cellAuteur *librairie, char *strAuteur, char *strTitre)` qui ajoute dans le catalogue un livre de l'auteur indiqué. L'auteur existe dans le catalogue. Un même livre ne peut pas être présent 2 fois dans la catalogue.
 
 Écrivez une fonction `void supprimer(cellAuteur **librairie, char *strAuteur)` qui supprime du catalogue un auteur et tous ses livres. L'auteur existe dans le catalogue.
 
