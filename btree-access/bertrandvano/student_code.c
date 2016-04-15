@@ -2,14 +2,12 @@
 #include <stdlib.h>
 #include "student_code.h"
 
-int *has_key(Node root, int key)
+int has_key(Node root, int key)
 {
 	//On verifie si on est sur la clee recherchee
 	if(root.key==key)
 	{
-		int* val=malloc(sizeof(int));
-		*val=root.value; 
-		return val;
+        return 1;
 	}
 	//Si la clee recherchee est plus petite, on descend l'arbre par la gauche.
 	else if(root.key>key)
@@ -18,7 +16,7 @@ int *has_key(Node root, int key)
 		{
 			return has_key(*(root.left),key);
 		}
-		return NULL;
+		return 0;
 	}
 	//Sinon la clee recherchee est plus grande, on descend l'arbre par la droite.
 	else
@@ -27,7 +25,7 @@ int *has_key(Node root, int key)
 		{
 			return has_key(*(root.right),key);
 		}
-		return NULL;  
+		return 0; 
 	 }
 }
 
