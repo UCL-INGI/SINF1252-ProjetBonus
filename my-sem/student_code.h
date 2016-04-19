@@ -7,6 +7,7 @@ typedef struct mySem {
     int value;
     int capacity;
     sem_process_t *head;
+    pthread_mutex_t mutex;
 } mysem_t;
 
 int mysem_init(mysem_t *sem, unsigned int value);
