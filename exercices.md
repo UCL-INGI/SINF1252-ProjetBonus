@@ -37,11 +37,12 @@ typedef struct mySem {
     int value;
     int capacity;
     sem_process_t *head;
+    pthread_mutex_t mutex;
 } mysem_t;
 
 ```
 
-Chaque sémaphore contient une valeur et une liste de processus bloqués. 
+Chaque sémaphore contient une valeur et une liste de processus bloqués. Le mutex de `mySem` devra être utilisé pour éviter que des appels concurrents des 4 fonctions susmentionnées sur la même sémaphore ne soient pas exécutés simultanément.
 
 Écrivez une fonction `int mysem_init(mysem_t *sem, unsigned int value);` qui assigne à `value` et `capacity` `sem` la valeur de l'argument `value` et initialise à `NULL` la liste des processus bloqués.
 
@@ -50,6 +51,8 @@ Chaque sémaphore contient une valeur et une liste de processus bloqués.
 Écrivez une fonction `int mysem_post(mysem_t *sem);` qui incrémente `value` de `sem` si aucun autre processus n'est bloqué, et sinon débloque le premier processus de la liste des processus bloqués. `value` ne peut jamais excéder `capacity`.
 
 Écrivez une fonction `mysem_close(mysem_t *sem);` qui libère toutes les ressourcées associées à un sémaphore. Si ce sémaphore a des processus bloqués, il les libère.
+
+
 
 *Tests imposés :* Vous devez tester les 4 fonctions. Il est important de tester le flux d'exécution, s'assurer que `sem_wait` est bien bloquant quand `value` vaut 0 et qu'il ajoute le processus bloqué à la fin de la liste, que `sem_post` va bien chercher le premier élément bloqué de la liste, que `value` n'excède jamais `capacity`, que `mysem_init` initialise proprement la sémaphore avec les bonnes valeurs et que `mysem_close` libère toutes les ressources correctement. 
 Pour la vérification de la libération des ressources, utilisez le mécanisme de LD_PRELOAD pour s'assurer que le nombre d'appels à `free` correspond bien au nombre de processus bloqués dans la liste (et que le mutex de chacun de ces processus bloqués est bien déverrouillé !), de même, testez aussi le cas où vous faites échouer `malloc`.
