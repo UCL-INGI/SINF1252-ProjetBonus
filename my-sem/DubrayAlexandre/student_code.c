@@ -25,61 +25,109 @@ int mysem_init(mysem_t *sem, unsigned int value){
 	sem->value = value;
 	sem->capacity = value;
 	sem->head = NULL;
+	pthread_mutex_init(&(sem->mutex),NULL);
 	return 0;
 }
 
 int mysem_wait(mysem_t *sem){
 	if(sem->value == 0){
-		sem_process_t *process =(sem_process_t *)malloc(sizeof(sem_process_t));
-		if(process == NULL){
-			printf("Erreur :malloc(process)");
-			return 1;
-		}
+		/* Si value < 0 on crée un nouveau processus et on le met dans la queue */
+		sem_process_t *process = (sem_process_t *)malloc(sizeof(sem_process_t));
+		if(process == NULL)
+			return -1;
+		process->next = NULL;
 		pthread_mutex_init(&(process->mutex),NULL);
-		process->next=NULL;
+		/* On lock le mutex pour pouvoir bloquer le process quand on l'aura ajouté à la queue */
+		pthread_mutex_lock(&(process->mutex));
+		/* Accès à la queue */
+		pthread_mutex_lock(&(sem->mutex));
 		if(sem->head == NULL){
 			sem->head = process;
+			pthread_mutex_unlock(&(sem->mutex));
+			/* On bloque le process tant que personne ne fait unlock */
+			pthread_mutex_lock(&(process->mutex));
 		}
 		else{
-			/* Parcour de la liste des process bloqué et place le nouveau process à la fin*/
 			sem_process_t *iterateur = sem->head;
-			/* On protège la liste chaînée pour ne pas la parcourir à plusieurs en même temps */
-			pthread_mutex_lock(&((sem->head)->mutex));
-			while(iterateur->next != NULL){
+			while(iterateur->next != NULL)
 				iterateur = iterateur->next;
-			}
 			iterateur->next = process;
-			pthread_mutex_unlock(&((sem->head)->mutex));
+			pthread_mutex_unlock(&(sem->mutex));
+			pthread_mutex_lock(&(process->mutex));
 		}
 		return 0;
 	}
-	(sem->value)--;
+	sem->value --;
 	return 0;
 }
 
 int mysem_post(mysem_t *sem){
 	if(sem->head == NULL){
-		if(sem->value == sem->capacity){
-			return 1;
-		}
-		(sem->value)++;
+		sem->value ++;
 		return 0;
 	}
-	pthread_mutex_lock(&((sem->head)->mutex));
-	sem_process_t *newHead = (sem->head)->next;
-	free(sem->head);
-	sem->head = newHead;
-	pthread_mutex_unlock(&((sem->head)->mutex));
-	return 0;
+	/* On bloque l'accès à la liste */
+	pthread_mutex_lock(&(sem->mutex));
+	sem_process_t *processToFree = sem->head;
+	sem->head = (sem->head)->next;
+	pthread_mutex_unlock(&(processToFree->mutex));
+	pthread_mutex_unlock(&(sem->mutex));
+	return 1;
 }
 
 int mysem_close(mysem_t *sem){
-	sem_process_t *iterateur = sem->head;
-	while(iterateur != NULL){
-		sem_process_t *temp = iterateur->next;
-		free(iterateur);
-		iterateur = temp;
+	if(sem->head == NULL){
+		free(sem);
+		return 0;
+	}
+	sem_process_t *iterator = sem->head;
+	while(iterator != NULL){
+		pthread_mutex_unlock(&(iterator->mutex));
+		sem_process_t *next = iterator->next;
+		free(iterator);
+		iterator = next;
 	}
 	free(sem);
 	return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
