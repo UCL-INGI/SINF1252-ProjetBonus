@@ -28,6 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "student_code.h"
 
+int testFree = 0;
+int testUnlock = 0;
 int nb_times_malloc_used = 0;
 int let_malloc_fail = 0;
 int nb_times_free_used = 0;
@@ -76,7 +78,7 @@ void test_wait_bloquant(void){
 	mysem_post(sem);
 	usleep(200);
 	CU_ASSERT_EQUAL(countAppelReussis,3);
-	mysem_close(sem);
+	free(sem);
 }
 /* Threads pour le test test_wait_add_end */
 void *auxi_test_wait_end1(void *arg){
@@ -92,7 +94,7 @@ void *auxi_test_wait_end2(void *arg){
 	mysem_wait(sem);
 	pthread_exit(NULL);
 }
-// @mysem_wait:test_wait_add_end => [mysem_wait n'ajoute pas les processus en fin de liste]
+// @mysem_wait:test_wait_add_end => [mysem_wait n'ajoute pas correctement les processus]
 void test_wait_add_end(void){
 	mysem_t *sem=(mysem_t *)malloc(sizeof(mysem_t));
 	mysem_init(sem,2);
@@ -101,6 +103,11 @@ void test_wait_add_end(void){
 	pthread_create(&(th[0]),NULL,&auxi_test_wait_end1,(void *)sem);
 	usleep(200);
 	sem_process_t *firstProcess = sem->head;
+	if(firstProcess == NULL){
+		CU_ASSERT_TRUE(0);
+		free(sem);
+		return;
+	}
 	/* On crée le deuxième thread qui va être directement bloquer et ajouter un processus dans la queue */
 	pthread_create(&(th[1]),NULL,&auxi_test_wait_end2,(void *)sem);
 	usleep(200);
@@ -108,7 +115,7 @@ void test_wait_add_end(void){
 	CU_ASSERT_PTR_EQUAL(firstProcess,sem->head);
 	/* On check qu'il y a bien un deuxième élément dans la queue */
 	CU_ASSERT_PTR_NOT_NULL(firstProcess->next);
-	mysem_close(sem);
+	free(sem);
 }
 
 jmp_buf label_test_mysem_wait_malloc;
@@ -142,17 +149,16 @@ void test_wait_malloc(void){
 		return;
 	}
 	pthread_t th;
-	pthread_create(&th,NULL,&auxi_test_wait_malloc,(void *)sem);
-	usleep(200);
 	if(setjmp(label_test_mysem_wait_malloc)==0){
-		CU_ASSERT_TRUE(1);
+		pthread_create(&th,NULL,&auxi_test_wait_malloc,(void *)sem);
+		usleep(200);
 	}
 	else{
 		CU_ASSERT_TRUE(0);
 	}
 	let_malloc_fail =0;
 	signal(SIGSEGV, SIG_DFL);
-	mysem_close(sem);
+	free(sem);
 }
 
 jmp_buf label_test_mysem_wait_segfault;
@@ -174,90 +180,22 @@ void test_wait_segfault(void){
 	}
 	mysem_init(sem,1);
 	mysem_wait(sem);
-
-	void *ptr = mmap(NULL,getpagesize(),PROT_WRITE, MAP_PRIVATE, -1, 0);
-	if(ptr == MAP_FAILED){
-		CU_FAIL("La mémoire n'as pas pu être allouée pour le test test_wait_segfault.");
-		return;
-	}
-	sem->head= (sem_process_t *)ptr;
+	sem->head = NULL;
 	if(signal(SIGSEGV,sig_handler1)==SIG_ERR){
 		CU_FAIL("Impossible d'enregistrer un signal handler.");
 		return;
 	}
 	pthread_t th;
-	pthread_create(&th,NULL,&auxi_test_wait_segfault,(void *)sem);
-	usleep(200);
 	if(setjmp(label_test_mysem_wait_segfault) == 0){
-		CU_ASSERT_PTR_NOT_NULL(sem->head);
+		pthread_create(&th,NULL,&auxi_test_wait_segfault,(void *)sem);
+		usleep(200);
 	}
 	else{
 		CU_ASSERT_TRUE(0);
 	}
 	signal(SIGSEGV, SIG_DFL);
-	munmap(ptr,getpagesize());
-	mysem_close(sem);
+	free(sem);
 }
-
-jmp_buf label_test_mysem_wait_segfault2;
-void sig_handler2(int signo){
-	longjmp(label_test_mysem_wait_segfault2,1);
-}
-/* Ajoute un élément dans la liste */
-void *auxi1_test_wait_segfault2(void *arg){
-	mysem_t *sem = (mysem_t *)arg;
-	mysem_wait(sem);
-	pthread_exit(NULL);
-}
-/* Ajoute le deuxième élément (on test si cet élément est bien ajouté sans qu'on aille plus loin que la fin de la queue) */
-void *auxi2_test_wait_segfault2(void *arg){
-	mysem_t *sem = (mysem_t *)arg;
-	mysem_wait(sem);
-	pthread_exit(NULL);
-}
-
-//@mysem_wait:test_wait_segfault2 => [La fonction wait essaie d'accéder à des processus après la fin de la liste]
-void test_wait_segfault2(void){
-	mysem_t *sem = (mysem_t *)malloc(sizeof(mysem_t));
-	if(sem == NULL){
-		CU_FAIL("La mémoire n'a pas pu être allouée pour le test test_wait_segfault2.");
-		return;
-	}
-	mysem_init(sem,1);
-	mysem_wait(sem);
-	
-	void *ptr = mmap(NULL, getpagesize()*2, PROT_READ | PROT_WRITE, MAP_PRIVATE|MAP_ANONYMOUS, -1, 0);
-	if(ptr == MAP_FAILED){
-		CU_FAIL("La mémoire n'a pas pu être allouée pour le test test_wait_segfault2");
-		return;
-	}
-	if(signal(SIGSEGV,sig_handler2) == SIG_ERR){
-		CU_FAIL("Impossible d'enregistrer un signal handler.");
-		return;
-	}
-	sem_process_t *ptrToFutureHead =(sem_process_t *) ptr+getpagesize()-sizeof(sem_process_t);
-	mprotect(ptr+getpagesize(), getpagesize(),PROT_WRITE);
-	/* On place le head de la liste à la fin de la première page */
-	sem->head = (sem_process_t *) (ptr+getpagesize()-sizeof(sem_process_t));
-	pthread_t th[2];
-	pthread_create(&(th[0]),NULL,&auxi1_test_wait_segfault2,(void *)sem);
-	usleep(200);
-	/* On replace la tête de la queue à la fin de la page */
-	*(ptrToFutureHead) = *(sem->head);
-	sem->head = ptrToFutureHead;
-	pthread_create(&th[1],NULL,&auxi2_test_wait_segfault2,(void *)sem);
-	usleep(200);
-	if(setjmp(label_test_mysem_wait_segfault2)== 0){
-		CU_ASSERT_EQUAL(length_list(sem->head),2);
-	}
-	else{
-		CU_ASSERT_TRUE(0);
-	}
-	signal(SIGSEGV,SIG_DFL);
-	munmap(ptr,getpagesize()*2);
-	mysem_close(sem);
-}
-
 
 void *auxi_test_post_take_elem(void *arg){
 	mysem_t *sem = (mysem_t *)arg;
@@ -276,7 +214,7 @@ void test_post_take_elem(void){
 	usleep(200);
 	mysem_post(sem);
 	CU_ASSERT_EQUAL(length_list(sem->head),2);
-	mysem_close(sem);
+	free(sem);
 }
 
 // @mysem_post:test_post_take_first => [mysem_post ne retire pas le premier processus de la liste]
@@ -292,8 +230,13 @@ void test_post_take_first(void){
 	usleep(200);
 	sem_process_t *firstHead = sem->head;
 	mysem_post(sem);
+	if(firstHead == NULL){
+		CU_ASSERT_TRUE(0);
+		free(sem);
+		return;
+	}
 	CU_ASSERT_PTR_EQUAL(sem->head,firstHead->next);
-	mysem_close(sem);
+	free(sem);
 }
 
 // @mysem_post:test_post_exceed_capacity => [mysem_post : value > capacity]
@@ -306,7 +249,7 @@ void test_post_exceed_capacity(void){
 	mysem_post(sem);
 	mysem_post(sem);
 	CU_ASSERT_EQUAL(sem->value,2);
-	mysem_close(sem);
+	free(sem);
 }
 
 // @mysem_init:test_init_value => [mysem_t n'est pas bien initialisé]
@@ -321,29 +264,35 @@ void test_init_value(void){
 
 // @mysem_wait:test_count_malloc => [La fonction mysem_wait n'appel pas le bon nombre de fois malloc]
 void test_count_malloc(void){
-	nb_times_malloc_used = 0;
 	mysem_t *sem=(mysem_t *)malloc(sizeof(mysem_t));;
 	mysem_init(sem,1);
 	mysem_wait(sem);
 	pthread_t th[3];
 	int i;
+	nb_times_malloc_used = 0;
 	for(i=0;i<3;i++)
 		pthread_create(&(th[i]),NULL,&auxi_test_post_take_elem,(void *)sem);
 	usleep(200);
 	CU_ASSERT_EQUAL(nb_times_malloc_used,3);
-	mysem_close(sem);
+	free(sem);
 }
 
+/* Auxi */
+void *auxi_free(void *arg){
+	mysem_t *sem = (mysem_t *)arg;
+	mysem_wait(sem);
+	pthread_exit(NULL);
+}
 // @mysem_close:test_close_free => [La fonction mysem_close ne libère pas tout les blocs]
 void test_close_free(void){
-	nb_times_free_used = 0;
 	mysem_t *sem = (mysem_t *)malloc(sizeof(mysem_t));
 	mysem_init(sem,0);
 	pthread_t th[3];
 	int i;
 	for(i=0;i<3;i++)
-		pthread_create(&(th[i]),NULL,&auxi_test_post_take_elem,(void *)sem);
+		pthread_create(&(th[i]),NULL,&auxi_free,(void *)sem);
 	usleep(200);
+	nb_times_free_used = 0;
 	mysem_close(sem);
 	CU_ASSERT_EQUAL(nb_times_free_used,4); // 4 car 3 process + la sémaphore
 }
@@ -357,7 +306,6 @@ void *auxi_test_close_unlock(void *arg){
 
 // @mysem_close:test_close_unlock => [La fonction d'unlock pas tous les mutex]
 void test_close_unlock(void){
-	nb_times_unlock_used = 0;
 	mysem_t *sem = malloc(sizeof(mysem_t));
 	mysem_init(sem,1);
 	mysem_wait(sem);
@@ -366,8 +314,10 @@ void test_close_unlock(void){
 	for(i=0;i<3;i++)
 		pthread_create(&(th[i]),NULL,&auxi_test_close_unlock,(void *)sem);
 	usleep(200);
+	nb_times_unlock_used = 0;
 	mysem_close(sem);
 	CU_ASSERT_EQUAL(nb_times_unlock_used,3);
+	
 }
 int main(){
 	CU_pSuite pSuite = NULL;
@@ -384,13 +334,13 @@ int main(){
 			CU_add_test(pSuite,"test_wait_add_end",test_wait_add_end) == NULL ||
 			CU_add_test(pSuite,"test_wait_malloc",test_wait_malloc) == NULL||
 			CU_add_test(pSuite,"test_wait_segfault",test_wait_segfault) == NULL||
-			CU_add_test(pSuite,"test_wait_segfault2",test_wait_segfault2) == NULL||
 			CU_add_test(pSuite,"test_post_take_elem",test_post_take_elem) == NULL||
 			CU_add_test(pSuite,"test_post_take_first",test_post_take_first) == NULL ||
 			CU_add_test(pSuite,"test_post_exceed_capacity",test_post_exceed_capacity) == NULL||
 			CU_add_test(pSuite,"test_init_value",test_init_value)==NULL||
 			CU_add_test(pSuite,"test_count_malloc",test_count_malloc)==NULL||
-			CU_add_test(pSuite,"test_close_free",test_close_free)==NULL){
+			CU_add_test(pSuite,"test_close_free",test_close_free)==NULL||
+			CU_add_test(pSuite,"test_close_unlock",test_close_unlock)==NULL){
 		CU_cleanup_registry();
 		return CU_get_error();
 	}

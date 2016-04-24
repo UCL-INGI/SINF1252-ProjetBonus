@@ -31,7 +31,7 @@ int mysem_init(mysem_t *sem, unsigned int value){
 
 int mysem_wait(mysem_t *sem){
 	if(sem->value == 0){
-		/* Si value < 0 on crée un nouveau processus et on le met dans la queue */
+		/* Si value == 0 on crée un nouveau processus et on le met dans la queue */
 		sem_process_t *process = (sem_process_t *)malloc(sizeof(sem_process_t));
 		if(process == NULL)
 			return -1;
@@ -62,17 +62,22 @@ int mysem_wait(mysem_t *sem){
 }
 
 int mysem_post(mysem_t *sem){
-	if(sem->head == NULL){
-		sem->value ++;
+	if(sem->value < sem->capacity){
+		if(sem->head == NULL){
+			sem->value ++;
+			return 0;
+		}
+		/* On bloque l'accès à la liste */
+		pthread_mutex_lock(&(sem->mutex));
+		sem_process_t *processToFree = sem->head;
+		sem->head = (sem->head)->next;
+		pthread_mutex_unlock(&(processToFree->mutex));
+		pthread_mutex_unlock(&(sem->mutex));
 		return 0;
 	}
-	/* On bloque l'accès à la liste */
-	pthread_mutex_lock(&(sem->mutex));
-	sem_process_t *processToFree = sem->head;
-	sem->head = (sem->head)->next;
-	pthread_mutex_unlock(&(processToFree->mutex));
-	pthread_mutex_unlock(&(sem->mutex));
-	return 1;
+	else{
+		return -1;
+	}
 }
 
 int mysem_close(mysem_t *sem){
