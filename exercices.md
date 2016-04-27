@@ -1,5 +1,24 @@
 # Liste des exercices proposés
 
+### logger : Écriture de logs
+
+*RESERVATION* : <1 personne>
+
+Vous développez un gestionnaire de logs (historique d'événements). Pour cela, vous voulez coder une fonction `void writeToLogs(char *dir, char *msg)` qui va ajouter une ligne à tous les fichiers finissant par l'extension ".log" du dossier associé au chemin `dir`. Cette ligne contiendra `msg` et finira par un retour à la ligne. Il n'y a pas de sous-dossiers.
+
+*Tests imposés* : Pour ces tests unitaires, vous devrez créer un dossier local à l'aide de `mkdir`. Vous y ajouterez plusieurs fichiers, certains finissant par ".log", d'autres non. Il faut un moins un fichier log vide et un autre ayant déjà du contenu (tout ça dans la fonction de setup de la suite). Vous vous assurerez alors que la fonction a bien écrit dans les bons fichiers, n'a pas modifié les fichiers non-logs et a correctement inséré la ligne à la fin des logs. Vous devrez ensuite supprimer les fichiers créés, puis le dossier (tout ça dans la fonction de cleanup de la suite).
+
+
+### sigDNA : Signaux & ADN
+
+*RESERVATION* : <1 personne>
+
+Vous travaillez dans une entreprise spécialisée dans l'étude de l'ADN et devez concevoir un programme qui permet de déterminer si un buffer contient une chaîne valide d'ADN ou non. Une chaîne ADN valide ne contient que les caractères "A", "T", "G", "C". Lorsqu'une nouvelle chaîne à analyser dans le buffer est disponible, un signal "SIGPOLL" est envoyé au programme. Vous devez coder une fonction `void analyse_dna_handler(int signum)` qui sera le handler du signal `SIGPOLL`. Cette fonction lira le contenu de la variable globale `char *dna_buffer` et mettra la variable globale `int is_DNA` à 1 si la chaîne ADN est valide, 0 sinon. 
+
+Écrivez aussi une fonction d'initialisation `int set_dna_handler()` qui associera le handler `analyse_dna_handler` au signal SIGPOLL. Cette fonction renvoie 0 si le handler a bien été enregistré, et une autre valeur quelconque sinon.
+
+*Tests imposés* : Il faut tout d'abord tester `set_dna_handler`. Pour cela il faut faire échouer la fonction `signal` grâce au mécanisme de LD_PRELOAD (voir README.md), et ensuite laisser la fonction associer le signal correctement. Les autres tests se résument à modifier le buffer, lancer le signal et s'assurer que `is_DNA` a bien la valeur associée au contenu du buffer.
+
 ### reader-writer : Gestion de readers/writers
 
 *RESERVATION* : <1 groupe de max. 2 personnes>
