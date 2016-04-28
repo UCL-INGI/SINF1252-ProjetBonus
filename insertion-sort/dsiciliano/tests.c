@@ -177,7 +177,7 @@ int main() {
        NULL == CU_add_test(pSuite, "test_tri5", test_tri5) ||
        NULL == CU_add_test(pSuite, "test_tri6", test_tri6) ||
        NULL == CU_add_test(pSuite, "test_tri7", test_tri7) ||
-       NULL == CU_add_test(pSuite, "test_tri7", test_tri8) 
+       NULL == CU_add_test(pSuite, "test_tri8", test_tri8) 
        ) {
         CU_cleanup_registry();
         return CU_get_error();
