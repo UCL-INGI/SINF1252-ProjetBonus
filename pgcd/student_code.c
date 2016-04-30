@@ -7,11 +7,13 @@
 #include <stdlib.h>
 #include <pthread.h>
 
-struct Node *factorize(unsigned int n){	
+void *factorize(void *nv){	
 	
+    unsigned int n = *(unsigned int*) nv;
+
 	int div = 1;
 	struct Node *list;
-	struct Node *head;
+	struct Node *head = NULL;
 	while(div <= n){
 		if (n % div == 0){
 			list=(struct Node *)malloc(sizeof(struct Node));
@@ -24,7 +26,33 @@ struct Node *factorize(unsigned int n){
 		}
 		div=div+1;
 	}
-	return head;
+	return (void*) head;
+}
+
+int match(struct Node * list1, struct Node * list2){
+	while(list1 && list2){
+		if(list1->divisor < list2->divisor){
+			list2 = list2->next;
+		}
+		else if (list1->divisor > list2->divisor){
+			list1 = list1->next;
+		}
+		else{
+			return list1->divisor;
+		}
+	}
+}
+
+void myfree(struct Node* list, int a)
+{
+   struct Node* curr = list;
+   struct Node* next;
+   while (curr != NULL)
+    {
+       next = curr->next;
+       free(curr);
+       curr = next;
+    }
 }
 
 unsigned int gcd(unsigned int a, unsigned int b){
@@ -38,11 +66,11 @@ unsigned int gcd(unsigned int a, unsigned int b){
 	void *list_a;
 	void *list_b;
 	
-	if(pthread_create(&thread_a, NULL, factorize,a) == -1){
+    if(pthread_create(&thread_a, NULL, factorize, (void*)&a) == -1){
 		perror("pthread_create");
 		return 0;
 	}
-	if(pthread_create(&thread_b, NULL, factorize,b) == -1){
+	if(pthread_create(&thread_b, NULL, factorize, (void*)&b) == -1){
 		perror("pthread_create");
 		return 0;
 	}
@@ -66,28 +94,5 @@ unsigned int gcd(unsigned int a, unsigned int b){
    	return matching_div;
 }
 
-int match(struct Node * list1, struct Node * list2){
-	while(list1 && list2){
-		if(list1->divisor < list2->divisor){
-			list2 = list2->next;
-		}
-		else if (list1->divisor > list2->divisor){
-			list1 = list1->next;
-		}
-		else{
-			return list1->divisor;
-		}
-	}
-}
 
-void myfree(struct Node* list,int a)
-{
-   struct node* curr;
-   while (list != NULL && list->divisor<=a)
-    {
-	   //printf("Valeur du noeud : %d\n",list->divisor);
-       curr = list;
-       list = list->next;
-       free(curr);
-    }
-}
+

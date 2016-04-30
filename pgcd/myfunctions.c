@@ -5,7 +5,6 @@
 #include <string.h>
 #include <dlfcn.h>
 
-
 void *malloc(size_t size) {
     // Ces 2 variables sont déclarées, initialisées et utilisées dans tests.c
     // Afin de pouvoir y accéder, on y ajoute le mot-clé extern
@@ -34,6 +33,7 @@ void *malloc(size_t size) {
 
     return ptr;
 }
+
 void free(void *ptr) {
 
     extern int nb_times_free_used;
@@ -42,30 +42,28 @@ void free(void *ptr) {
 
 
     // On déclare un pointeur vers une fonction qui a le même prototype
-    void *(*original_free) (void *ptr);
+    void (*original_free) (void *ptr);
     // On crée une copie du pointeur vers la fonction malloc originale
     original_free = dlsym(RTLD_NEXT, "free");
 
     // On exécute la fonction malloc originale, car exécuter malloc(size)
     // reviendrait à faire un appel récursif infini ...
-    void *pt = original_free(ptr);
-    
-        if (pt == NULL) // Dans le cas où malloc aurait réellement échoué
-        return NULL;
+    original_free(ptr);
+    //void *pt = original_free(ptr);
+
 }
+
 int pthread_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg){
 	extern int nb_times_thread_create;
 	
 	nb_times_thread_create++;
 	
 	    // On déclare un pointeur vers une fonction qui a le même prototype
-    void *(*original_pthread_create) (pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg);
+    int (*original_pthread_create) (pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine) (void *), void *arg);
     // On crée une copie du pointeur vers la fonction malloc originale
     original_pthread_create = dlsym(RTLD_NEXT, "pthread_create");
 
     // On exécute la fonction malloc originale, car exécuter malloc(size)
     // reviendrait à faire un appel récursif infini ...
-    void *pt = original_pthread_create(thread,attr,start_routine,arg);
-    
-    return EXIT_SUCCESS;
+    return original_pthread_create(thread,attr,start_routine,arg);
 }

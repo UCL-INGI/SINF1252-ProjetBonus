@@ -3,6 +3,6 @@ struct Node {
     struct Node *next;
 };
 
-struct Node *factorize(unsigned int n);
+void *factorize(void *n);
 
 unsigned int gcd(unsigned int a, unsigned int b);
