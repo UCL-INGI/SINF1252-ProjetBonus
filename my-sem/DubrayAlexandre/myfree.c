@@ -1,4 +1,4 @@
-/* Header du fichier pour la résolution de l'exercice my-sem
+/* Fonction malloc pour les tests de my-sem
 Copyright (C) 2016 Dubray Alexandre
 
 This program is free software: you can redistribute it and/or modify
@@ -15,19 +15,19 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-typedef struct semProcess {
-    pthread_mutex_t mutex;
-    struct semProcess *next;
-} sem_process_t;
 
-typedef struct mySem {
-    int value;
-    int capacity;
-    sem_process_t *head;
-    pthread_mutex_t mutex;
-} mysem_t;
+#define _GNU_SOURCE
 
-int mysem_init(mysem_t *sem, unsigned int value);
-int mysem_wait(mysem_t *sem);
-int mysem_post(mysem_t *sem);
-int mysem_close(mysem_t *sem);
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <dlfcn.h>
+
+void free(void *ptr){
+
+	extern int nb_times_free_used;
+	nb_times_free_used++;
+	void *(*original_free) (void *ptr);
+	original_free = dlsym(RTLD_NEXT, "free");
+	original_free(ptr);
+}
