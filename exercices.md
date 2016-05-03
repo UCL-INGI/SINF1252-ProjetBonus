@@ -2,7 +2,7 @@
 
 ### logger : Écriture de logs
 
-*RESERVATION* : <Ghazaleh Aghakhani>
+*RESERVATION* : Ghazaleh Aghakhani
 
 Vous développez un gestionnaire de logs (historique d'événements). Pour cela, vous voulez coder une fonction `void writeToLogs(char *dir, char *msg)` qui va ajouter une ligne à tous les fichiers finissant par l'extension ".log" du dossier associé au chemin `dir`. Cette ligne contiendra `msg` et finira par un retour à la ligne. Il n'y a pas de sous-dossiers.
 
