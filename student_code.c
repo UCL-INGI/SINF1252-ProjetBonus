@@ -38,7 +38,6 @@ void writeToLogs(char *dir, char *msg)
     {
 
       // looking for the files with extensions
-      printf("the current file is : %s\n", dp->d_name);
       extension = strrchr(dp->d_name, '.'); //find the last dot 
       if (!extension) 
 	{
@@ -47,7 +46,7 @@ void writeToLogs(char *dir, char *msg)
       
       else // files with extension .log
 	{
-	  printf("extension is %s\n", extension + 1);
+	 // printf("extension is %s\n", extension + 1);
 	  log_extension = extension + 1;
 	  // among the files with extensions, find the ones with '.log' extension
 	  if(strcmp(log_extension,"log") == 0)
