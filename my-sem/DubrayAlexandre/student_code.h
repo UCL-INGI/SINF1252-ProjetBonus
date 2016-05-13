@@ -23,7 +23,7 @@ typedef struct semProcess {
 typedef struct mySem {
     int value;
     int capacity;
-    sem_process_t *head;
+    sem_process_t *blocked_procs;
     pthread_mutex_t mutex;
 } mysem_t;
 
