@@ -1,10 +1,8 @@
 all: 
-	gcc -D C99 -Wall -Werror -fPIC -shared -o mymalloc.so mymalloc.c -ldl
-	gcc -D C99 -Wall -Werror -fPIC -shared -o myfree.so myfree.c -ldl
-	gcc -D C99 -Wall -Werror -fPIC -shared -o myunlock.so myunlock.c -ldl
-	gcc -pthread -D C99 -Wall -Werror student_code.c tests.c -lcunit -rdynamic -o tests
+	gcc -D C99 -std=gnu99 -Wall -Werror -fPIC -shared -o mydestroy.so mydestroy.c -ldl -g
+	gcc -pthread -D C99 -std=gnu99 -Wall -Werror student_code.c tests.c -lcunit -rdynamic -o tests -g
 	
 run:
-	LD_PRELOAD="./mymalloc.so ./myfree.so ./myunlock.so" ./tests
+	LD_PRELOAD=./mydestroy.so ./tests
 
 .PHONY: run

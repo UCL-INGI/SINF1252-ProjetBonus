@@ -21,13 +21,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <pthread.h>
 #include "student_code.h"
 
-int mysem_init(mysem_t *sem, unsigned int value){
-	sem->value = value;
-	sem->capacity = value;
-	sem->head = NULL;
-	pthread_mutex_init(&(sem->mutex),NULL);
-	return 0;
-}
 
 int mysem_wait(mysem_t *sem){
 	if(sem->value == 0){
@@ -35,20 +28,22 @@ int mysem_wait(mysem_t *sem){
 		sem_process_t *process = (sem_process_t *)malloc(sizeof(sem_process_t));
 		if(process == NULL)
 			return -1;
+
 		process->next = NULL;
 		pthread_mutex_init(&(process->mutex),NULL);
 		/* On lock le mutex pour pouvoir bloquer le process quand on l'aura ajouté à la queue */
 		pthread_mutex_lock(&(process->mutex));
 		/* Accès à la queue */
 		pthread_mutex_lock(&(sem->mutex));
-		if(sem->head == NULL){
-			sem->head = process;
+
+		if(sem->blocked_procs == NULL){
+			sem->blocked_procs = process;
 			pthread_mutex_unlock(&(sem->mutex));
 			/* On bloque le process tant que personne ne fait unlock */
 			pthread_mutex_lock(&(process->mutex));
 		}
 		else{
-			sem_process_t *iterateur = sem->head;
+			sem_process_t *iterateur = sem->blocked_procs;
 			while(iterateur->next != NULL)
 				iterateur = iterateur->next;
 			iterateur->next = process;
@@ -57,77 +52,29 @@ int mysem_wait(mysem_t *sem){
 		}
 		return 0;
 	}
-	sem->value --;
+
+	sem->value--;
 	return 0;
 }
 
 int mysem_post(mysem_t *sem){
-	if(sem->head == NULL){
-		sem->value ++;
+	if(sem->blocked_procs == NULL) {
+        if (sem->value < sem->capacity)
+            sem->value++;
 		return 0;
 	}
 	/* On bloque l'accès à la liste */
 	pthread_mutex_lock(&(sem->mutex));
-	sem_process_t *processToFree = sem->head;
-	sem->head = (sem->head)->next;
+
+	sem_process_t *processToFree = sem->blocked_procs;
+	sem->blocked_procs = (sem->blocked_procs)->next;
+
 	pthread_mutex_unlock(&(processToFree->mutex));
 	pthread_mutex_unlock(&(sem->mutex));
-	return 1;
-}
 
-int mysem_close(mysem_t *sem){
-	if(sem->head == NULL){
-		free(sem);
-		return 0;
-	}
-	sem_process_t *iterator = sem->head;
-	while(iterator != NULL){
-		pthread_mutex_unlock(&(iterator->mutex));
-		sem_process_t *next = iterator->next;
-		free(iterator);
-		iterator = next;
-	}
-	free(sem);
+    pthread_mutex_destroy(&(processToFree->mutex));
+
 	return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
