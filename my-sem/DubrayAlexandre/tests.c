@@ -1,5 +1,5 @@
 /* Tests unitaires pour my-sem
-Copyright (C) 2016 Dubray Alexandre
+Copyright (C) 2016 Dubray Alexandre, Mathieu Xhonneux
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,6 +29,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "student_code.h"
 
 int nb_times_destroy_used = 0;
+int count = 0;
+
 int init_suite1(void){
 	return 0;
 }
@@ -193,23 +195,28 @@ void test_wait_add_end(void){
 	//mysem_close(sem);
 }
 
-void *auxi_test_post_take_elem(void *arg){
+void *auxi_test_post_count(void *arg){
 	mysem_t *sem = (mysem_t *)arg;
 	working_mysem_wait(sem);
+    count++;
 	pthread_exit(NULL);
 }
-// @mysem_post:test_post_take_elem => [mysem_post ne retire pas de processus dans blocked_procs]
-void test_post_take_elem(void){
+// @mysem_post:test_post_count => [mysem_post ne débloque pas le processus]
+void test_post_count(void){
 	mysem_t *sem=(mysem_t *)malloc(sizeof(mysem_t));
 	mysem_init(sem,1);
 	working_mysem_wait(sem);
+
 	pthread_t th[3];
-	int i;
-	for(i=0;i<3;i++)
-		pthread_create(&(th[i]),NULL,&auxi_test_post_take_elem,(void *)sem);
-	usleep(200);
+	for(int i=0;i<3;i++)
+		pthread_create(&(th[i]),NULL,&auxi_test_post_count,(void *)sem);
+
+    usleep(500); //on passe la main aux threads pour qu'ils fassent leur wait
 	mysem_post(sem);
-	CU_ASSERT_EQUAL(length_list(sem->blocked_procs),2);
+	mysem_post(sem);
+    usleep(500);
+
+    CU_ASSERT_EQUAL(count, 2);
 
 	//mysem_close(sem);
 }
@@ -225,15 +232,13 @@ void test_post_take_first(void){
 	/* On réutilise la fonction auxiliaire du test précédent */
 	int i;
 	for(i=0;i<3;i++)
-		pthread_create(&(th[i]),NULL,&auxi_test_post_take_elem,(void *)sem);
+		pthread_create(&(th[i]),NULL,&auxi_test_post_count,(void *)sem);
 	usleep(200);
 
-    CU_ASSERT_PTR_NOT_NULL(sem->blocked_procs);
-    if (sem->blocked_procs != NULL) {
-        sem_process_t *following = sem->blocked_procs->next;
-        mysem_post(sem);
-        CU_ASSERT_PTR_EQUAL(sem->blocked_procs,following);
-    }
+    sem_process_t *following = sem->blocked_procs->next;
+    mysem_post(sem);
+    CU_ASSERT_PTR_EQUAL(sem->blocked_procs,following);
+	CU_ASSERT_EQUAL(length_list(sem->blocked_procs),2);
 
 	//mysem_close(sem);
 }
@@ -294,8 +299,8 @@ int main(){
 	}
 	if(CU_add_test(pSuite, "test_wait_bloquant",test_wait_bloquant) == NULL ||
        CU_add_test(pSuite,"test_wait_add_end",test_wait_add_end) == NULL || 
-       CU_add_test(pSuite,"test_post_take_elem",test_post_take_elem) == NULL||
-       CU_add_test(pSuite,"test_post_take_first",test_post_take_first) == NULL ||
+       CU_add_test(pSuite,"test_post_count",test_post_count) == NULL||
+       //CU_add_test(pSuite,"test_post_take_first",test_post_take_first) == NULL ||
        CU_add_test(pSuite,"test_post_destroy",test_post_destroy) == NULL ||
        CU_add_test(pSuite,"test_post_exceed_capacity",test_post_exceed_capacity) == NULL) {
 
