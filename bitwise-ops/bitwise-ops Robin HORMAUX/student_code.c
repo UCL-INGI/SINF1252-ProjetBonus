@@ -1,0 +1,91 @@
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include "student_code_HORMAUX.h"
+
+
+unsigned char get_bit(unsigned int x, unsigned int pos){
+
+	/* On crée une clé qui est un nombre en binaire avec 1 seul bit
+	initialisé à 1, décalé jusqu'à la position pos */
+	unsigned int key = 1 << (pos);
+	printf("%u lol\n", key);
+	/* On vérifie si la clé AND le nombre de départ renvoie un
+	nombre positif */
+	if (x & key)
+		return 1;
+	/* Sinon la clé AND le nombre de départ renvoie 0 */
+	else
+		return 0;
+}
+
+unsigned int set_bit(unsigned int x, unsigned int pos, unsigned char value){
+	/* On vérifie que la valeur à laquelle on veut initialiser un bit
+	est bien 1 ou 0, sinon on retourne sans chager le nombre */
+	if (value !=1 && value !=0)
+		return x;
+
+	/* Si la value est 1, on crée une clé avec un bit initialisé à 1
+	à la position pos et on la croise avec x */
+	if(value == 1){
+		unsigned int key = (1 << pos);
+		return (key | x);
+	}
+
+	/* Si la value est 0, on crée une clé avec tous les bits plus petit
+	que pos initialisés à 1 et on la croise avec x */
+	if(value == 0){
+		unsigned int key = ~(1 << pos);
+		return (key & x);
+	}
+}
+
+unsigned char get_3_leftmost_bit(unsigned int x){
+	/* On décale juste l'entier de 28 bits vers la droite */
+	unsigned int a = 1<<31;
+	int count = 32;
+	while(x%a == x){
+		a = a >> 1;
+		count--;
+	}
+	return (unsigned char) (x >> (count-3));
+}
+
+unsigned char get_4_rightmost_bit(unsigned int x){
+	/* On crée un clé qui a seulement les 4 bits les plus à droite
+	chacun initialisé à 1 */
+	unsigned int key = 15;
+	/* On croise le nombre AND la clé */
+	unsigned char n = x & key;
+	return n;
+}
+
+unsigned int unset_first_bit(unsigned int x){
+	/* On vérifie qu'il y a bien un bit à initialiser à 0 */
+	if (x <= 0)
+		return x;
+
+	unsigned int key = 1;
+	unsigned int copy = x;
+
+	/* On décrémente une copie de x en incrémentant la clé pour avoir
+	le plus grand bit de x */
+	while (copy >>= 1){
+		key = key << 1;
+	}
+
+	/* On enlève ce plus grand bit de x avant de le retourner */
+	return (x - key);
+}
+
+unsigned int cycle_bits(unsigned int x, unsigned int n){
+	/*On décale vers la gauche de n bits*/
+	unsigned int ret = 0;
+	for(int i = 0; i<32; i++){
+		unsigned int key = 1;
+		ret = ret && key << ((i+n)%32);
+	}
+	return ret;
+}
