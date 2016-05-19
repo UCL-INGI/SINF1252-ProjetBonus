@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "CUnit/CUnit.h"
 #include "CUnit/Basic.h"
-#include "../student_code_HORMAUX.h"
+#include "student_code.h"
 
 int init_suite(void) 	{return 0;}
 int clean_suite(void) 	{return 0;}

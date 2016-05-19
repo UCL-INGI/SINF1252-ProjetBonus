@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
-#include "../student_code_HORMAUX.h"
+#include "student_code_HORMAUX.h"
 
 
 unsigned char get_bit(unsigned int x, unsigned int pos){
@@ -15,10 +15,10 @@ unsigned char get_bit(unsigned int x, unsigned int pos){
 	/* On vérifie si la clé AND le nombre de départ renvoie un
 	nombre positif */
 	if (x & key)
-		return '1';
+		return 1;
 	/* Sinon la clé AND le nombre de départ renvoie 0 */
 	else
-		return '0';
+		return 0;
 }
 
 unsigned int set_bit(unsigned int x, unsigned int pos, unsigned char value){
@@ -44,8 +44,13 @@ unsigned int set_bit(unsigned int x, unsigned int pos, unsigned char value){
 
 unsigned char get_3_leftmost_bit(unsigned int x){
 	/* On décale juste l'entier de 28 bits vers la droite */
-	unsigned char n = x >> 28;
-	return n;
+	unsigned int a = 1<<31;
+	int count = 32;
+	while(x%a == x){
+		a = a >> 1;
+		count--;
+	}
+	return (unsigned char) (x >> (count-3));
 }
 
 unsigned char get_4_rightmost_bit(unsigned int x){
@@ -77,5 +82,10 @@ unsigned int unset_first_bit(unsigned int x){
 
 unsigned int cycle_bits(unsigned int x, unsigned int n){
 	/*On décale vers la gauche de n bits*/
-	return(x << n);
+	unsigned int ret = 0;
+	for(int i = 0; i<32; i++){
+		unsigned int key = 1;
+		ret = ret && key << ((i+n)%32);
+	}
+	return ret;
 }
